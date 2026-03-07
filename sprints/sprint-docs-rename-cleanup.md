@@ -10,10 +10,10 @@ Improving documentation across three related repos for the civic AI tools projec
 ## Three repos
 
 1. **civic-ai-tools** — Starter project people fork/clone to get started
-2. **opengov-mcp-server** (renaming to **socrata-mcp-server**) — The MCP server itself
+2. **socrata-mcp-server** (formerly opengov-mcp-server) — The MCP server itself
 3. **civic-ai-tools-website** — Demo website at civicaitools.org
 
-## Completed (this session)
+## Completed
 
 ### civic-ai-tools cleanup (Phase 1-3)
 - [x] Expanded `.gitignore` with comprehensive patterns
@@ -31,55 +31,51 @@ Improving documentation across three related repos for the civic AI tools projec
 - [x] Updated `devcontainer.json` with `openFiles` and Python extension
 - [x] Committed and pushed to main
 
-### opengov-mcp-server releases
+### Releases
 - [x] Dropped orphaned local release notes commit
 - [x] Created GitHub Release for v0.2.0 (existing tag)
 - [x] Tagged and released v0.3.0 (current HEAD)
 
 ### Research
-- [x] Audited opengov-mcp-server repo structure and docs
+- [x] Audited socrata-mcp-server repo structure and docs
 - [x] Audited civic-ai-tools-website repo structure and docs
 - [x] Researched Socrata's official `odp-mcp` server (socrata/odp-mcp)
 - [x] Decided on rename: `opengov-mcp-server` → `socrata-mcp-server`
 - [x] Strategic decision: pursue merge with Socrata (Option B), rename now regardless
 
+### Repo Rename
+- [x] Renamed GitHub repo `npstorey/opengov-mcp-server` → `npstorey/socrata-mcp-server`
+- [x] Updated local git remote URL
+- [x] Updated all references in civic-ai-tools (setup.sh, config examples, devcontainer scripts, docs, README, CLAUDE.md, AGENTS.md)
+- [x] Updated socrata-mcp-server itself (package.json name/bin/URLs, src/index.ts server name, CONTRIBUTING.md)
+- [x] Updated civic-ai-tools-website (README, CLAUDE.md, about page links, tools.ts comment)
+- [x] Committed and pushed all three repos
+
 ---
 
-## TODO: Repo Rename
+## TODO: Coordinated Render/Vercel Rename (do together)
 
-### 1. Rename GitHub repo
-- [ ] Rename `npstorey/opengov-mcp-server` → `npstorey/socrata-mcp-server` via GitHub API
-- [ ] Update local git remote URL
+These changes affect the live deployment and should be done as one coordinated update:
 
-### 2. Update references in civic-ai-tools
-- [ ] `scripts/setup.sh` — git clone URL, directory names
-- [ ] `.mcp.json.example` — path references
-- [ ] `.cursor/mcp.json.example` — path references
-- [ ] `.vscode/mcp.json.example` — path references
-- [ ] `.vscode/mcp.json.city-proxy-example` — path references
-- [ ] `README.md` — repo links
-- [ ] `CLAUDE.md` — repo links
-- [ ] `AGENTS.md` — repo links, directory references
-- [ ] `docs/setup.md` — repo links, directory references, troubleshooting paths
-- [ ] `docs/opengov-skill.md` — check for repo references
-- [ ] `.devcontainer/post-create.sh` — git clone URL, directory names
-- [ ] `.devcontainer/post-start.sh` — directory names, config generation
-- [ ] `.devcontainer/welcome.txt` — check for references
-- [ ] `.gitignore` — check `.mcp-servers/` comment
+- [x] Rename Render service to `socrata-mcp-server` (new URL: https://socrata-mcp-server.onrender.com)
+- [x] Update Render repository link to `npstorey/socrata-mcp-server`
+- [x] Update `OPENGOV_MCP_URL` value in Vercel to new Render URL
+- [x] Verified live site still works at civicaitools.org
+- [ ] Rename env var: `OPENGOV_MCP_URL` → `SOCRATA_MCP_URL` in Vercel dashboard (after code change)
+- [ ] Rename `opengovMcpTools` → `socrataMcpTools` in `src/lib/mcp/tools.ts`
+- [ ] Update imports in `src/app/api/compare-stream/route.ts` and `src/app/api/compare/route.ts`
+- [ ] Rename `src/lib/mcp/opengov-skill.ts` → `src/lib/mcp/socrata-skill.ts`
+- [ ] Rename `OPENGOV_SKILL` constant → `SOCRATA_SKILL`
+- [ ] Update imports in API routes
+- [ ] Update GitHub display links in `src/app/about/page.tsx` and `src/components/SkillPromptDisclosure.tsx`
+- [ ] Deploy and verify
 
-### 3. Update references in socrata-mcp-server itself
-- [ ] `package.json` — name field, repository URL
-- [ ] `README.md` — any self-references
-- [ ] `CLAUDE.md` — any self-references
-- [ ] `CONTRIBUTING.md` — any self-references
+---
 
-### 4. Update references in civic-ai-tools-website
-- [ ] `CLAUDE.md` — repo links
-- [ ] `README.md` — related repos section
-- [ ] `src/lib/mcp/client.ts` — check for hardcoded URLs (Render deployment)
-- [ ] Any other source files referencing opengov-mcp-server
+## TODO: Remaining Rename Housekeeping
 
-### 5. Commit and push all three repos
+- [ ] Add note to top of `docs/opengov-skill.md` that this was formerly called "OpenGov MCP"
+- [ ] Rename local directory `/Users/nathanstorey/Code/opengov-mcp-server` → `socrata-mcp-server` (cosmetic, local only)
 
 ---
 
