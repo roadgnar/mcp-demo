@@ -20,6 +20,7 @@ See [docs/setup.md](docs/setup.md) for detailed instructions.
 |------|-------------|
 | Claude Code CLI | `.mcp.json` |
 | Cursor IDE | `.cursor/mcp.json` |
+| Codex CLI | `.codex/config.toml` |
 
 ## Socrata MCP Guidance
 

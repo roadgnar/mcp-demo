@@ -1,0 +1,20 @@
+# Codex CLI MCP server configuration
+# Copy to ~/.codex/config.toml or .codex/config.toml (project-level)
+# See: https://developers.openai.com/codex/mcp/
+
+[mcp_servers.socrata]
+command = "node"
+args = [".mcp-servers/socrata-mcp-server/dist/index.js", "--stdio"]
+
+[mcp_servers.socrata.env]
+DEFAULT_DOMAIN = "data.cityofnewyork.us"
+SOCRATA_APP_TOKEN = "your_token_here"
+CACHE_ENABLED = "true"
+LOG_LEVEL = "info"
+
+[mcp_servers.data-commons]
+command = "datacommons-mcp"
+args = ["serve", "--skip-api-key-validation", "stdio"]
+
+[mcp_servers.data-commons.env]
+DC_API_KEY = "your_key_here"

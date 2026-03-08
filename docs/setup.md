@@ -111,6 +111,8 @@ After running setup:
 
 ```
 civic-ai-tools/
+├── .codex/
+│   └── config.toml.example    # MCP config template for Codex CLI
 ├── .devcontainer/
 │   └── devcontainer.json       # GitHub Codespaces / Dev Container config
 ├── .mcp-servers/
@@ -212,6 +214,26 @@ For NYC city employees behind the corporate proxy (`bcpxy.nycnet`):
    ```
    /mcp
    ```
+
+### Codex CLI
+
+1. Run `./scripts/setup.sh` (builds MCP servers)
+2. Copy the Codex config template:
+   ```bash
+   mkdir -p ~/.codex
+   cp .codex/config.toml.example ~/.codex/config.toml
+   ```
+3. Edit `~/.codex/config.toml` and replace the placeholder API keys with your own
+4. Start Codex:
+   ```bash
+   codex
+   ```
+5. Use `/mcp` in the Codex TUI to verify servers are connected
+
+Alternatively, add servers via the CLI:
+```bash
+codex mcp add socrata -- node .mcp-servers/socrata-mcp-server/dist/index.js --stdio
+```
 
 ---
 
@@ -435,6 +457,7 @@ NOT relative paths like:
 | `.devcontainer/devcontainer.json` | GitHub Codespaces / Dev Container config | Committed to repo |
 | `.mcp.json.example` | MCP config template for Claude Code CLI | Committed to repo |
 | `.mcp.json` | Your MCP config (gitignored) | `setup.sh` auto-generates |
+| `.codex/config.toml.example` | MCP config template for Codex CLI | Committed to repo |
 | `.cursor/mcp.json.example` | MCP config template for Cursor IDE | Committed to repo |
 | `.cursor/mcp.json` | Your Cursor MCP config with absolute paths (gitignored) | `setup.sh` auto-generates |
 | `.vscode/mcp.json.example` | MCP config template for VS Code + Copilot | Committed to repo |
