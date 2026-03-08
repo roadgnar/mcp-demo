@@ -82,3 +82,18 @@ Their separate `preview_dataset` (default 50 rows) is a clean pattern for schema
 
 ### 6. SoQL injection prevention (Low priority for guidance, medium for server)
 Their `soqlBuilder.ts` has comprehensive injection prevention: field validation, dangerous pattern detection, parameterized value handling. Worth adopting in the server itself, though our current approach (LLM writes raw SoQL, Socrata API validates) hasn't caused issues in practice.
+
+---
+
+## Issue Tracking
+
+Recommendations 1, 3, and 4 have been turned into issues:
+- [socrata-mcp-server#38](https://github.com/npstorey/socrata-mcp-server/issues/38) — Smart result limits (recommendation 1, refined: cap raw queries, allow unlimited aggregations)
+- [civic-ai-tools#27](https://github.com/npstorey/civic-ai-tools/issues/27) — Pagination guidance (recommendation 4)
+- [socrata-mcp-server#39](https://github.com/npstorey/socrata-mcp-server/issues/39) — Enriched search results (recommendation 3)
+
+## Future Considerations (not yet tracked as issues)
+
+**Structured query parameters (recommendation 2):** odp-mcp's structured `selectFields`/`whereConditions` approach prevents SoQL syntax errors and injection risk by having the server build the query from validated JSON params. Worth revisiting if we see a pattern of LLM-generated SoQL syntax errors in production. The tradeoff is added complexity in the tool schema and potentially limiting the expressiveness of what the LLM can query.
+
+**SoQL injection prevention (recommendation 6):** odp-mcp's `soqlBuilder.ts` has thorough regex-based injection detection (`;`, `DROP`, `UNION`, `--` comments, hex-encoded strings). Socrata's API already rejects malformed queries, so this is defense-in-depth. Worth adding if we open the server to untrusted clients or if Socrata's validation proves insufficient. Low real-world risk currently.
