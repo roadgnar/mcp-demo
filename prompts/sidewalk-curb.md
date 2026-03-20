@@ -40,7 +40,7 @@ Boston has old sidewalk geometry data (2011) but NO condition assessment. Cyvl's
 
 > Search 311 for sidewalk-related complaints. Then use Cyvl imagery to show visual evidence of the reported problems.
 
-(The legacy 311 dataset includes categories like "Sidewalk Repair" and "Unshoveled Sidewalk" — use the `type` field to filter.)
+(The legacy 311 dataset includes `'Sidewalk Repair (Make Safe)'` and `'Unshoveled Sidewalk'` in the `case_title` field — filter with `case_title ILIKE '%sidewalk%'`. Always use `execute_sql`, not `query_data`.)
 
 > Find neighborhoods with the most sidewalk 311 complaints but no corresponding repair work orders.
 
@@ -49,5 +49,5 @@ Boston has old sidewalk geometry data (2011) but NO condition assessment. Cyvl's
 - Sidewalk imagery is captured as part of street-level scans — sidewalks are visible in the foreground of most images
 - Compound queries like "cracked sidewalks and damaged curbs" return high-confidence results across Boston
 - Specific ADA queries ("wheelchair accessible ramp with tactile paving") outperform generic ones ("ADA ramps")
-- Combine with 311 data: filter `type` for "Sidewalk Repair" to find condition-related complaints
+- Combine with 311 data: filter `case_title ILIKE '%sidewalk%'` to find condition-related complaints (always use `execute_sql`)
 - Boston HAS "Sidewalk Centerline" and "Sidewalk Inventory" datasets but they're from 2011 with geometry only — frame the gap as "location data exists, condition data doesn't"

@@ -83,22 +83,72 @@ Do NOT mix these up. `search_imagery` uses `lon`, the `list_*` tools use `lng`.
 
 ## Tool Selection (Boston Open Data)
 
-- **`execute_sql`** — use for ALL queries on Active Work Zones (PascalCase columns break `aggregate_data`). Also use for complex joins, ILIKE filters, and any query where column names are case-sensitive.
-- **`aggregate_data`** — use for simple GROUP BY on datasets with lowercase columns (crashes, 311 legacy, permits). Faster than raw SQL.
-- **`query_data`** — use for sampling rows with `limit` (no filters). Filters use exact match only and fail on some datasets — prefer `execute_sql` with WHERE clauses for reliable filtering.
-- **`get_schema`** — ALWAYS call before any query on a new resource. Non-negotiable.
+- **`execute_sql`** — **DEFAULT CHOICE for all queries.** Use for Active Work Zones (PascalCase), crash data, 311 data, and anything with WHERE/GROUP BY/ILIKE. Most reliable tool.
+- **`aggregate_data`** — optional shortcut for simple GROUP BY on datasets with lowercase columns. Falls back to `execute_sql` if it fails.
+- **`query_data`** — ONLY for unfiltered sampling with `limit`. **Never use filters** — the `filters` parameter returns HTTP 409 errors on most datasets.
+- **`get_schema`** — call before any query on a new resource to confirm column names. Non-negotiable.
+
+## Dataset Schemas (Critical — Read Before Querying)
+
+### Vision Zero Crashes (`e4bfe397-6bfc-49c5-9367-c879fac7401d`)
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `dispatch_ts` | text | Timestamp string. Use `left(dispatch_ts, 4)` for year. |
+| `mode_type` | text | **Values: `'ped'`, `'bike'`, `'mv'`** — NOT spelled out. |
+| `street` | text | UPPERCASE: `'WASHINGTON ST'`, `'BLUE HILL AVE'`. ~40% of records have NULL street. |
+| `xstreet1`, `xstreet2` | text | Cross streets (also UPPERCASE). |
+| `lat`, `long` | **text** | Must CAST to float for spatial queries: `CAST(lat AS FLOAT)`. |
+| `location_type` | text | e.g., `'Intersection'`, `'Non Intersection'` |
+
+**There is NO `neighborhood` column in crash data.** To filter by area, use lat/long with CAST and BETWEEN, or filter by street name.
+
+### 311 Requests 2026 (`1a0b420d-99f1-4887-9851-990b2a5a6e17`)
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `case_title` | text | **The complaint type field.** Values: `'Request for Pothole Repair'`, `'Sidewalk Repair (Make Safe)'`, `'Unshoveled Sidewalk'`. |
+| `subject` | text | Higher-level category (less specific than `case_title`). |
+| `reason` | text | Department-level category. |
+| `type` | text | Sub-type (often NULL or generic). |
+| `neighborhood` | text | e.g., `'Dorchester'`, `'Roxbury'`, `'Jamaica Plain'`. |
+| `latitude`, `longitude` | text | Location of complaint. |
+
+**For pothole/sidewalk queries, always filter on `case_title` using ILIKE:**
+```sql
+SELECT neighborhood, case_title, COUNT(*) as cnt
+FROM "1a0b420d-99f1-4887-9851-990b2a5a6e17"
+WHERE case_title ILIKE '%pothole%'
+GROUP BY neighborhood, case_title
+ORDER BY cnt DESC
+```
+
+### Active Work Zones (`36fcf981-e414-4891-93ea-f5905cec46fc`)
+
+**All columns are PascalCase — MUST use `execute_sql` with double-quoted column names.**
+
+| Column | Notes |
+|--------|-------|
+| `"Neighborhood"` | e.g., `'SOUTH END/BACK BAY'`, `'ROXBURY'` |
+| `"Street"` | Street name |
+| `"Project_Category"` | `'EMERGENCY'`, `'NEW CONDUIT'`, `'RESURFACING'`, etc. |
+| `"Status"` | e.g., `'Active'` |
+| `"ExpirationDate"` | Permit expiry |
 
 ## 311 Data Warning
 
-- **Pothole/sidewalk data is ONLY in the legacy 311 dataset** (`1a0b420d-...`) using the `type` field.
+- **Pothole/sidewalk data is ONLY in the legacy 311 dataset** (`1a0b420d-...`) — filter on `case_title`.
 - **The New System dataset** (`254adca6-...`) does NOT contain pothole or sidewalk categories — it has limited records, mostly animal control and street lights.
 - When querying 311 for infrastructure complaints, always use the legacy/year-specific resource.
 
 ## Known Gotchas
+- **`query_data` filters are broken** — the `filters` parameter returns HTTP 409 errors. **Always use `execute_sql`** with WHERE clauses instead.
 - **Dense urban corridors may timeout on `list_distresses`** — this is the slowest Cyvl call (3-7 seconds). Fall back to `search_imagery` or reduce radius to 100m. Alternatively, use `list_pavement_scores` with `score_max=25` as a faster proxy for worst roads (5-7x faster).
 - **Sidewalk data exists but is incomplete** — Boston has "Sidewalk Centerline" and "Sidewalk Inventory" (both 2011, geometry only). The city knows where sidewalks are, but has no systematic condition data.
 - **Active Work Zones columns are PascalCase** — MUST use `execute_sql` with double-quoted column names: `"Neighborhood"`, `"Project_Category"`. `aggregate_data` and `query_data` both fail on this dataset.
 - **Street names are UPPERCASE in crash data:** `'BLUE HILL AVE'` not `'Blue Hill Ave'`
+- **Crash lat/long are TEXT:** Always `CAST(lat AS FLOAT)` before numeric comparisons.
+- **~40% of crash records have NULL street names** — totals grouped by street will undercount.
 - Always cite which MCP server the data came from
 - When showing crash data alongside pavement data, note they're from independent sources
 

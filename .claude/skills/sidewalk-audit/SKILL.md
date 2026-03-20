@@ -25,9 +25,10 @@ Most cities lack systematic sidewalk condition data. Cyvl imagery search can fil
 3. **If a specific neighborhood** is requested, use `geocode_location` first, then add spatial filters (`lat`, `lon`, `radius_m`).
 
 4. **Cross-reference with 311 complaints:** Query 311 for sidewalk-related complaints:
-   - Legacy 311: filter `type` for sidewalk-related values (e.g., "Sidewalk Repair")
-   - New system: filter `service_name` for sidewalk-related values
-   - Resource (2026 legacy): `1a0b420d-99f1-4887-9851-990b2a5a6e17`
+   - Legacy 311 (`1a0b420d-99f1-4887-9851-990b2a5a6e17`): filter `case_title ILIKE '%sidewalk%'`
+   - Returns: `'Sidewalk Repair (Make Safe)'`, `'Unshoveled Sidewalk'`
+   - For pothole complaints: `case_title ILIKE '%pothole%'`
+   - **Always use `execute_sql`** — `query_data` filters are broken
 
 5. **Present findings:**
    - Damaged sidewalks found in imagery (count and confidence)

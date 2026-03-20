@@ -17,9 +17,14 @@ Portal: data.boston.gov | MCP server: `boston` | 6 tools
 
 ### Vision Zero Crash Records
 - **Resource ID:** `e4bfe397-6bfc-49c5-9367-c879fac7401d`
-- **Fields:** `dispatch_ts`, `mode_type` (mv/ped/bike), `location_type`, `street`, `xstreet1`, `xstreet2`, `lat`, `long`
-- **Coverage:** 2015-2025, ~40K records
-- **Notes:** No severity field. One record per incident.
+- **Fields:** `dispatch_ts`, `mode_type`, `location_type`, `street`, `xstreet1`, `xstreet2`, `lat`, `long`
+- **Coverage:** 2015-2025, ~53K records
+- **`mode_type` values:** `'ped'`, `'bike'`, `'mv'` — abbreviated, NOT spelled out
+- **`street`:** UPPERCASE — `'WASHINGTON ST'`, `'BLUE HILL AVE'`
+- **`lat`/`long`:** TEXT type — must `CAST(lat AS FLOAT)` for numeric operations
+- **~40% of records have NULL street names** — aggregations by street will undercount
+- **No `neighborhood` column** — filter by street name or use CAST lat/long with BETWEEN
+- **No severity field.** One record per incident.
 
 ### Vision Zero Fatality Records
 - **Resource ID:** `92f18923-d4ec-4c17-9405-4e0da63e1d6c`
@@ -34,8 +39,10 @@ Portal: data.boston.gov | MCP server: `boston` | 6 tools
 
 **Legacy (2026, pre-transition):**
 - **Resource ID:** `1a0b420d-99f1-4887-9851-990b2a5a6e17`
-- **Fields:** `case_enquiry_id`, `open_dt`, `case_title`, `type`, `neighborhood`, `latitude`, `longitude`
-- **Filter potholes:** `type = 'Request for Pothole Repair'`
+- **Fields:** `case_enquiry_id`, `open_dt`, `case_title`, `subject`, `reason`, `type`, `neighborhood`, `latitude`, `longitude`
+- **Filter potholes:** `case_title ILIKE '%pothole%'` — returns `'Request for Pothole Repair'`, `'Pothole'`, `'BWSC Pothole'`
+- **Filter sidewalks:** `case_title ILIKE '%sidewalk%'` — returns `'Sidewalk Repair (Make Safe)'`, `'Unshoveled Sidewalk'`
+- **WARNING:** The `type` field is NOT the complaint type — use `case_title` instead
 
 **Historical:** Resources exist for every year 2011-2025.
 
@@ -64,7 +71,7 @@ Portal: data.boston.gov | MCP server: `boston` | 6 tools
 
 ## 311 Data Warning
 
-- **Pothole/sidewalk data is ONLY in the legacy 311 dataset** (`1a0b420d-...`) using the `type` field
+- **Pothole/sidewalk data is ONLY in the legacy 311 dataset** (`1a0b420d-...`) — filter on `case_title` (NOT `type`)
 - **The New System dataset** (`254adca6-...`) does NOT contain pothole or sidewalk categories — only ~7K records, mostly animal control and street lights
 - When querying 311 for infrastructure complaints, always use the legacy/year-specific resource
 
