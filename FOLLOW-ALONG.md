@@ -96,91 +96,87 @@ These stations aren't in any structured dataset — found purely from imagery.
 Search for "dogs" in the Boston street imagery. Download three of them to results/dogs/.
 ```
 
-If we can find dogs, we can find anything.
+If we can find dogs, we can find anything. (Note that some dogs are obscured by anonymization, for the dog's privacy.)
 
 ---
 
-## Part 2: Infrastructure Data — Pavement Conditions
+## Part 2: Cross-MCP Analysis — Filling Data Gaps
 
-Beyond imagery, the Cyvl MCP has structured pavement condition data for every road in Boston.
+The Boston Open Data MCP connects to data.boston.gov — hundreds of city datasets on everything from crashes to building permits. But what happens when the data you need doesn't exist?
 
-### 2a. Worst streets downtown
-
-```
-Show me the worst pavement conditions near Downtown Crossing in Boston. I want streets with PCI scores below 25.
-```
-
-### 2b. Drill into a bad street
+### 2a. Show what exists (and what's missing)
 
 ```
-Get the full pavement detail for the worst inspection from the previous results — show me all the distresses detected and the inspection cell imagery.
+Search the Boston Open Data portal for any dataset about sidewalks or curb conditions.
 ```
 
-You'll get a breakdown of every crack, pothole, and weathering instance on a 30-foot section, with annotated mask images.
+You'll find geometry data from 2011 — the city knows WHERE sidewalks are but not what CONDITION they're in. This is a real gap in the city's data.
 
-### 2c. High-severity distresses on Washington St
+### 2b. Fill the gap with imagery
 
 ```
-Find high-severity pavement distresses on Washington Street near Melnea Cass Boulevard in Roxbury. What types of damage are most common?
+Since Boston has no sidewalk condition data, use Cyvl imagery search to find "cracked sidewalks and damaged curbs" across the city. Then search for "wheelchair accessible ramp with tactile paving." How many of each did you find?
 ```
 
-> **Tip:** If this times out, reduce the radius or try `search_imagery("damaged road surface")` for the same area instead. (If results seem off, try coordinates 42.333, -71.083.)
+The city has no structured data on sidewalk conditions — but Cyvl's imagery search just created an inventory from street-level photos. Two data sources, one answer.
+
+### 2c. Find accessibility obstructions
+
+```
+Search for "narrow sidewalk blocked by utility pole" in Boston imagery. Download three of them to results/blocked_sidewalk/.
+```
+
+ADA compliance issues that no city database tracks, found instantly from imagery.
+
+### 2d. Cross with 311 complaints
+
+```
+Query 311 service requests for sidewalk-related complaints. How many "Sidewalk Repair" requests are there in the 2026 data?
+```
+
+Citizens are reporting damage one at a time with no systematic way to prioritize — imagery search provides the city-wide view that individual complaints can't.
 
 ---
 
-## Part 3: Boston Open Data — Crash Records
+## Part 3: City Intelligence — Crashes Meet Pavement
 
-Now let's bring in the city's own data. The Boston Open Data MCP connects to data.boston.gov.
+Now for the real payoff. The city tracks crash records. Cyvl has pavement condition data. Nobody has ever connected the two. What happens when we ask whether bad roads and crashes are correlated?
 
-### 3a. Crash statistics by type
-
-```
-Using the Boston Open Data MCP, query the Vision Zero crash records. How many crashes are there by mode type (motor vehicle, pedestrian, bike)?
-```
-
-### 3b. Most dangerous streets
+### 3a. The most dangerous streets
 
 ```
 Which streets have the most crashes in Boston? Query Vision Zero crash records grouped by street name.
 ```
 
-### 3c. Active construction zones
-
-```
-Using the Boston Open Data MCP, query the Active Work Zones dataset. Which neighborhoods have the most active construction? And break it down by project category.
-```
-
----
-
-## Part 4: Cross-MCP Analysis — Crashes Meet Pavement
-
-This is where the two MCPs work together. No one has connected these datasets before.
-
-### 4a. Washington St — the most dangerous street
+### 3b. Washington St — crashes and pavement
 
 ```
 Washington Street has the most crashes of any street in Boston. Using the Cyvl MCP, show me the pavement condition and high-severity distresses on Washington Street in Roxbury. Is there a connection between road quality and crashes?
 ```
 
-### 4b. Blue Hill Ave — the pedestrian story
+This is the question nobody could ask before — it requires joining crash data from Boston Open Data with pavement scores from Cyvl.
+
+### 3c. Blue Hill Ave — the pedestrian story
 
 ```
 How many pedestrian and bike crashes have occurred on Blue Hill Avenue? Then search Cyvl imagery for "damaged road surface and potholes" near Blue Hill Avenue in Mattapan. Download three of them to results/blue_hill_ave/pedestrian/.
 ```
 
-### 4c. Visual evidence on Washington St
+### 3d. Visual evidence on Washington St
 
 ```
 Search Cyvl imagery for "damaged road surface" on Washington Street in Roxbury. Download three of them to results/washington_st/damaged_road_surface/.
 ```
 
-### 4d. The 311 connection
+### 3e. The 311 connection
 
 ```
 Are there 311 pothole complaints on the same streets that have the most crashes? Query 311 service requests for pothole-related complaints in Dorchester and Roxbury.
 ```
 
-### 4e. Build a prioritized repair list
+Three independent data sources — crashes, pavement scores, and citizen complaints — all pointing at the same streets.
+
+### 3f. Build a prioritized repair list
 
 ```
 Based on everything we've found, build me a prioritized repair list for the top 5 most dangerous streets in Boston. Rank by combined crash count and pavement severity. For each street, include: crash count by type, worst PCI score, dominant distress type, and one street-level photo.
@@ -190,45 +186,15 @@ This turns the analysis into a decision-support tool — the "so what" moment.
 
 ---
 
-## Part 5: The Data Gap — Sidewalks
+## Part 4: Deliverable Generation
 
-### 5a. Show what exists (and what's missing)
-
-```
-Search the Boston Open Data portal for any dataset about sidewalks or curb conditions.
-```
-
-You'll find geometry data from 2011 — the city knows WHERE sidewalks are but not what CONDITION they're in.
-
-### 5b. Fill the gap with imagery
+The budget office doesn't read dashboards — they read reports with photos. Let's turn the crash-pavement correlation into something you can hand to the mayor.
 
 ```
-Since Boston has no sidewalk condition data, use Cyvl imagery search to find "cracked sidewalks and damaged curbs" across the city. Then search for "wheelchair accessible ramp with tactile paving." How many of each did you find?
+Create a PDF report showing the correlation between crash frequency and pavement condition on Washington Street. Search for street-level imagery of the damage, download the photos, and embed them in the report. Include crash data, pavement scores, and a repair recommendation. Save everything to results/washington_report/.
 ```
 
-### 5c. Find accessibility obstructions
-
-```
-Search for "narrow sidewalk blocked by utility pole" in Boston imagery. Download three of them to results/blocked_sidewalk/.
-```
-
-### 5d. Cross with 311 complaints
-
-```
-Query 311 service requests for sidewalk-related complaints. How many "Sidewalk Repair" requests are there in the 2026 data?
-```
-
-Citizens are reporting damage one at a time with no systematic way to prioritize — imagery search provides that.
-
----
-
-## Part 6: Deliverable Generation
-
-```
-Create a PDF report about infrastructure safety on Washington Street. Search for street-level imagery of the damage, download the photos, and embed them in the report. Include crash data, pavement scores, and a repair recommendation. Save everything to results/washington_report/.
-```
-
-The key: Claude should search imagery, download real photos, and embed them in the PDF — not just describe what it found.
+The key: Claude searches imagery, downloads real photos, and embeds them in the PDF — a question becomes a budget-justification artifact in two minutes.
 
 ---
 
@@ -319,4 +285,3 @@ Compare construction permits (Active Work Zones) with construction visible in im
 - Dense areas may timeout on `list_distresses` — use `search_imagery` as an alternative.
 - The first Cyvl call is slow (cold start). After warmup, everything is fast.
 - Street names are UPPERCASE in crash data: `'BLUE HILL AVE'` not `'Blue Hill Ave'`.
-
