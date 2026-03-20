@@ -51,7 +51,7 @@ You should see both servers connected:
 The first Cyvl MCP call in a session can take 5-10 seconds (cold start). Run one search to warm up the connection:
 
 ```
-Search for "fire hydrants" in the Boston project. How many did you find?
+Search for "construction sites" in the Boston project. How many did you find?
 ```
 
 Once this returns, you're good to go. Subsequent calls are fast.
@@ -65,7 +65,7 @@ The Cyvl MCP has 237,000 street-level images of Boston, all searchable by natura
 ### 1a. Find fire hydrants
 
 ```
-Search for "fire hydrants" in the Boston project. Download three of them to results/fire_hydrants/.
+Search for "fire hydrants" imagery in the Boston project. Download three of them to results/fire_hydrants/.
 ```
 
 This is the highest-confidence query — concrete, well-defined objects return the most reliable results.
@@ -73,7 +73,7 @@ This is the highest-confidence query — concrete, well-defined objects return t
 ### 1b. Find faded crosswalk markings
 
 ```
-Search for "faded crosswalk markings" in Boston. Download three of them to results/faded_crosswalk_markings/.
+Search for "faded crosswalk markings" imagery in Boston. Download three of them to results/faded_crosswalk_markings/.
 ```
 
 Safety-critical marking degradation quantified across the entire city.
@@ -81,7 +81,7 @@ Safety-critical marking degradation quantified across the entire city.
 ### 1c. Find cracked sidewalks
 
 ```
-Search for "cracked sidewalks and damaged curbs" across Boston.  Download three of them to results/cracked_sidewalks/.
+Search for "cracked sidewalks and damaged curbs" imagery across Boston.  Download three of them to results/cracked_sidewalks/.
 ```
 
 Boston has no sidewalk condition data — this is the only way to inventory sidewalk conditions at scale.
@@ -89,7 +89,7 @@ Boston has no sidewalk condition data — this is the only way to inventory side
 ### 1d. Find construction sites
 
 ```
-Search for "construction sites with heavy machinery" in Boston. Download three of them to results/construction_sites/.
+Search for "construction sites with heavy machinery" imagery in Boston. Download three of them to results/construction_sites/.
 ```
 
 Construction activity visible in street-level photos — independent of the city's permit database. Try removing "with heavy machinery" to see how qualifiers narrow results.
@@ -97,7 +97,7 @@ Construction activity visible in street-level photos — independent of the city
 ### 1e. Find Blue Bike stations
 
 ```
-Search for "blue bike docking stations" in the Boston project and tell me show many you found. Download three of them to results/blue_bike_stations/.
+Search for "blue bike docking stations" imagery in the Boston project and tell me show many you found. Download three of them to results/blue_bike_stations/.
 ```
 
 These stations aren't in any structured dataset — found purely from imagery.
