@@ -131,7 +131,7 @@ ADA compliance issues that no city database tracks, found instantly from imagery
 ### 2d. Cross with 311 complaints
 
 ```
-Query 311 service requests for sidewalk-related complaints. How many "Sidewalk Repair" requests are there in the 2026 data?
+Query 311 service requests for sidewalk-related complaints. How many "Sidewalk Repair" requests are there in the 2026 data? Corroborate that with Cyvl's pavement data and imagery. Write a markdown report and download 3 images to results/sidewalk_repair/. 
 ```
 
 Citizens are reporting damage one at a time with no systematic way to prioritize — imagery search provides the city-wide view that individual complaints can't.
@@ -285,3 +285,4 @@ Compare construction permits (Active Work Zones) with construction visible in im
 - Dense areas may timeout on `list_distresses` — use `search_imagery` as an alternative.
 - The first Cyvl call is slow (cold start). After warmup, everything is fast.
 - Street names are UPPERCASE in crash data: `'BLUE HILL AVE'` not `'Blue Hill Ave'`.
+
