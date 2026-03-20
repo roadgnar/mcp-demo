@@ -10,6 +10,15 @@ If you haven't already, clone the repo first — see the [Quick Start in README.
 
 ### Step 1: Open the project
 
+**Desktop:**
+
+1. Open Claude Desktop
+2. Open Cowork and scope to the `mcp-demo` repo
+3. (Optional) Tell Claude to read over and understand the repo
+4. Get cooking!
+
+**Code:**
+
 ```bash
 cd mcp-demo
 claude
