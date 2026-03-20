@@ -4,8 +4,18 @@ Explore Boston's infrastructure through two MCP servers working together in Clau
 
 ## Prerequisites
 
+**Required:**
 - **Claude account**: Pro, Max, Teams, or Enterprise (free plan does not include Claude Code)
 - **Claude Code**: Installed and authenticated (see [Install Claude Code](#install-claude-code) below)
+- **Node.js 18+**: Needed for the Boston Open Data MCP connection (`npx mcp-remote`)
+
+**Optional (for PDF report generation):**
+- **Google Chrome or Chromium** — used for HTML-to-PDF conversion via headless mode. Most systems already have this. If not:
+  - macOS: `brew install --cask google-chrome`
+  - Linux: `sudo apt install google-chrome-stable`
+  - Windows: Install from [google.com/chrome](https://www.google.com/chrome/)
+
+Without Chrome, the `/generate-report` skill generates HTML that you can open in any browser and print to PDF manually.
 
 ## Install Claude Code
 
@@ -101,6 +111,7 @@ Search for "fire hydrants" in Boston and show me 3 images
 | `/sidewalk-audit` | Inventory sidewalks/curbs from imagery |
 | `/infrastructure-report` | Generate stakeholder-ready reports |
 | `/explore-dataset` | Browse and query Boston open data |
+| `/generate-report` | Generate PDF report/slides from infrastructure data |
 
 ## Running the Demo
 
