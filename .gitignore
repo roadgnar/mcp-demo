@@ -5,7 +5,5 @@
 .DS_Store
 Thumbs.db
 
-# Examples output (may contain large files)
-examples/*.pdf
-examples/*.png
-examples/*.jpg
+# Results output
+results/*

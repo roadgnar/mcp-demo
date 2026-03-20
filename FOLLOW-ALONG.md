@@ -237,34 +237,10 @@ Citizens are reporting damage one at a time with no systematic way to prioritize
 ## Part 6: Deliverable Generation
 
 ```
-Create a report about infrastructure safety on Washington Street in Boston. Include:
-1. Crash statistics from Vision Zero
-2. Pavement condition data from Cyvl
-3. Street-level imagery showing the damage
-4. A prioritized repair recommendation
-
-Format it as a report I could share with the mayor's office.
+Create a PDF report about infrastructure safety on Washington Street. Search for street-level imagery of the damage, download the photos, and embed them in the report. Include crash data, pavement scores, and a repair recommendation. Save everything to results/washington_report/.
 ```
 
----
-
-## Part 7: Tool Generation — Build a Custom Tool
-
-This is what "MCP as a platform" looks like in practice — an AI agent builds a working tool from a natural language request.
-
-### 7a. ADA Compliance Checker
-
-```
-Build me an interactive tool that shows ADA ramps from Cyvl imagery one by one. For each image, let me mark it as "compliant" or "non-compliant" with a note. After reviewing all images, generate a summary report with the compliance rate and a list of non-compliant locations.
-```
-
-Claude will build a working interactive tool right in the terminal.
-
-### 7b. Pothole Triage Tool
-
-```
-Build me a tool that pulls the top 20 pothole complaints from 311, shows me the street-level imagery for each location, and lets me assign a priority (urgent/medium/low). Export the prioritized list as a CSV.
-```
+The key: Claude should search imagery, download real photos, and embed them in the PDF — not just describe what it found.
 
 ---
 
@@ -277,6 +253,30 @@ See imagery search results rendered geospatially on a map:
 3. Run a search — the results appear as density clusters across the city
 
 Try the same queries from Part 1 and see them visualized on the map.
+
+## Bonus: Tool Generation — Build a Custom Tool
+
+Claude Code can build working interactive tools from a natural language description. You describe the workflow, Claude writes and runs the code. This is what "MCP as a platform" looks like — custom applications built on demand using live infrastructure data.
+
+### ADA Compliance Checker
+
+```
+Build me a tool that shows ADA ramps from Cyvl imagery one by one. For each image, let me mark it as "compliant" or "non-compliant" with a note. After reviewing, generate a summary with the compliance rate.
+```
+
+### Pothole Triage Tool
+
+```
+Build me a tool that pulls pothole complaints from 311, shows street-level imagery for each location, and lets me assign a priority. Export the prioritized list as a CSV.
+```
+
+### Sign Condition Inspector
+
+```
+Build me a tool that shows stop signs in a neighborhood one by one from imagery. Let me rate each as good, damaged, or missing.
+```
+
+See `prompts/tool-generation.md` for more examples.
 
 ---
 
