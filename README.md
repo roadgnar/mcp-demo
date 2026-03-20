@@ -12,8 +12,7 @@ Answer any question about your city's infrastructure — find safety hazards inv
 ## Prerequisites
 
 **Required:**
-- **Claude account**: Pro, Max, Teams, or Enterprise (free plan does not include Claude Code)
-- **Claude Code**: Installed and authenticated (see [Install Claude Code](#install-claude-code) below)
+- **Claude account**: Pro, Max, Teams, or Enterprise
 - **Cyvl account**: Required for infrastructure data and imagery (ask your team for access)
 - **Node.js 18+**: Needed for the Boston Open Data MCP connection (`npx mcp-remote`)
   Install from [nodejs.org](https://nodejs.org/) or via `brew install node` (macOS) / `winget install OpenJS.NodeJS` (Windows)
@@ -26,10 +25,59 @@ Answer any question about your city's infrastructure — find safety hazards inv
 
 Without Chrome, the `/generate-report` skill generates HTML that you can open in any browser and print to PDF manually.
 
-## Install Claude Code
+## Quick Start — Claude Desktop (Cowork)
 
-### macOS (13.0+)
+The fastest way to get started. No terminal required.
 
+### 1. Install Claude Desktop
+
+Download from [claude.ai/download](https://claude.ai/download) for macOS or Windows and sign in with your Claude account.
+
+### 2. Clone or download this repo
+
+Download the repo as a ZIP from GitHub and unzip it, or if you have `git` installed:
+
+```bash
+git clone https://github.com/roadgnar/mcp-demo.git
+```
+
+### 3. Open the repo in Cowork
+
+1. Open Claude Desktop
+2. Click the **Cowork** tab (bottom-left)
+3. Click **"Select folder"** and choose the `mcp-demo` folder you just cloned/downloaded
+4. Cowork opens a session with the repo loaded — `CLAUDE.md` and `.mcp.json` are picked up automatically
+
+### 4. Connect the Cyvl MCP
+
+The Boston Open Data MCP auto-connects via `.mcp.json` — no action needed.
+
+For Cyvl, you need to add it as a connector:
+
+1. In Cowork, open the **MCP connectors** panel (plug icon in the sidebar)
+2. Search for **"Cyvl"** and click **Connect**
+3. A browser window opens — log in with your Cyvl account and authorize access
+4. Once connected, both MCPs show as active
+
+### 5. Start exploring
+
+Once both servers are connected, type your first prompt:
+
+```
+Search for "fire hydrants" in Boston and show me 3 images
+```
+
+Skills are available via `/` commands — type `/` to see all six (search-imagery, crash-analysis, sidewalk-audit, etc.).
+
+---
+
+## Alternate Setup — Claude Code (Terminal)
+
+If you prefer working from the command line, Claude Code gives you the same MCP access in a terminal environment.
+
+### Install Claude Code
+
+**macOS (13.0+):**
 ```bash
 # Recommended (auto-updates)
 curl -fsSL https://claude.ai/install.sh | bash
@@ -38,15 +86,14 @@ curl -fsSL https://claude.ai/install.sh | bash
 brew install --cask claude-code
 ```
 
-### Linux (Ubuntu 20.04+ / Debian 10+)
-
+**Linux (Ubuntu 20.04+ / Debian 10+):**
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-### Windows (10 1809+)
+**Windows (10 1809+):**
 
-**Prerequisite:** Install [Git for Windows](https://git-scm.com/downloads/win) first.
+Prerequisite: Install [Git for Windows](https://git-scm.com/downloads/win) first.
 
 ```powershell
 # PowerShell
@@ -56,21 +103,13 @@ irm https://claude.ai/install.ps1 | iex
 winget install Anthropic.ClaudeCode
 ```
 
-### WSL
+**WSL:** Install inside your WSL distro using the Linux command above.
 
-Install inside your WSL distro using the Linux command above.
+**Verify:** `claude --version`
 
-### Verify
+**First-time auth:** Run `claude` — a browser window opens for OAuth login. Log in with your Claude account.
 
-```bash
-claude --version
-```
-
-### First-time authentication
-
-Run `claude` — a browser window opens for OAuth login. Log in with your Claude account.
-
-## Quick Start
+### Quick Start (Claude Code)
 
 ```bash
 # 1. Clone the repo
@@ -85,13 +124,15 @@ claude
 # Click "Cyvl" → log in with your Cyvl account when the browser opens → authenticate
 ```
 
-The **Boston Open Data MCP** auto-connects via `.mcp.json` — no auth needed (public data).
+The Boston Open Data MCP auto-connects via `.mcp.json` — no auth needed.
 
-Once both servers show as connected, you're ready:
+Once both servers show as connected:
 
 ```
 Search for "fire hydrants" in Boston and show me 3 images
 ```
+
+---
 
 ## What's In This Repo
 
@@ -109,7 +150,7 @@ Search for "fire hydrants" in Boston and show me 3 images
 
 - **`CLAUDE.md`** teaches Claude how to use the tools. It's general-purpose — works for any infrastructure question, not just the demo script.
 - **`FOLLOW-ALONG.md`** is the demo walkthrough. It has specific prompts, expected result counts, and notes about what to look for. Follow it step by step.
-- **Skills** are reusable workflows. Type `/` in Claude Code to see them.
+- **Skills** are reusable workflows. Type `/` in Claude Code or Cowork to see them.
 
 ## Available Skills
 
@@ -126,7 +167,7 @@ Search for "fire hydrants" in Boston and show me 3 images
 
 ```mermaid
 graph LR
-    User[You / Claude Code] -->|MCP| Cyvl[Cyvl MCP]
+    User[You / Claude Desktop or Code] -->|MCP| Cyvl[Cyvl MCP]
     User -->|MCP| Boston[Boston Open Data MCP]
     User -->|MCP| Your[Your MCP Server]
     Cyvl --> Images[237K Street Images]
@@ -138,7 +179,7 @@ graph LR
 ## Running the Demo
 
 Open `FOLLOW-ALONG.md` and work through it section by section. Each part has:
-- A prompt you can copy-paste into Claude Code
+- A prompt you can copy-paste
 - Expected results so you know what to look for
 - Notes on what makes the result interesting
 
@@ -192,7 +233,7 @@ For example, to add Cambridge open data:
 
 The Boston project ID is hardcoded in `CLAUDE.md`. To switch to a different city:
 
-1. Run `list_projects` in Claude Code to discover available projects
+1. Run `list_projects` to discover available projects
 2. Find the project ID for your city
 3. Update the project ID in `CLAUDE.md`
 
@@ -200,11 +241,11 @@ The Boston project ID is hardcoded in `CLAUDE.md`. To switch to a different city
 
 1. Create a new folder in `.claude/skills/` (e.g., `.claude/skills/my-skill/`)
 2. Add a `SKILL.md` file describing what the skill does, its inputs, and step-by-step instructions
-3. Claude Code will pick it up automatically — invoke it with `/my-skill`
+3. Both Claude Desktop (Cowork) and Claude Code will pick it up automatically — invoke with `/my-skill`
 
-### MCP beyond Claude Code
+### MCP beyond Claude
 
-MCP is a protocol — any AI client that supports the Model Context Protocol can connect to these servers, not just Claude Code. If your team uses other MCP-compatible tools, they can use the same `.mcp.json` configuration.
+MCP is a protocol — any AI client that supports the Model Context Protocol can connect to these servers. If your team uses other MCP-compatible tools, they can use the same `.mcp.json` configuration.
 
 ## Example Prompts
 
@@ -232,8 +273,9 @@ See `prompts/` for more organized by use case.
 
 | Problem | Fix |
 |---------|-----|
-| Cyvl MCP not connected | Run `/mcp` inside Claude Code, click Cyvl, complete OAuth |
-| Boston MCP not connected | Check `.mcp.json` is present. Run `/mcp` to verify. Install Node.js 18+ from [nodejs.org](https://nodejs.org/) — `npx` is included automatically. |
+| Cyvl MCP not connected (Cowork) | Open the MCP connectors panel, search for Cyvl, and complete OAuth |
+| Cyvl MCP not connected (Claude Code) | Run `/mcp` inside Claude Code, click Cyvl, complete OAuth |
+| Boston MCP not connected | Check `.mcp.json` is present. Install Node.js 18+ from [nodejs.org](https://nodejs.org/) — `npx` is included automatically. |
 | 502 Bad Gateway on Cyvl call | Retry once — these are transient proxy errors that resolve immediately |
 | `list_distresses` times out | Reduce radius to 100m, or use `search_imagery` instead (never times out) |
 | SQL column name error | Column names are case-sensitive on some datasets. Always check schema first. |
@@ -269,6 +311,7 @@ mcp-demo/
 
 ## Resources
 
+- [Claude Desktop Download](https://claude.ai/download)
 - [Claude Code Setup Guide](https://code.claude.com/docs/en/setup)
 - [Claude Code MCP Docs](https://code.claude.com/docs/en/mcp)
 - [Cyvl MCP Documentation](https://i3.cyvl.dev/docs)
