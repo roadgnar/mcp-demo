@@ -46,26 +46,14 @@ You should see both servers connected:
 
 ---
 
-## Warmup
-
-The first Cyvl MCP call in a session can take 5-10 seconds (cold start). Run one search to warm up the connection:
-
-```
-Search for "construction sites" in the Boston project. How many did you find?
-```
-
-Once this returns, you're good to go. Subsequent calls are fast.
-
----
-
 ## Part 1: Imagery Search — "Search for Anything"
 
-The Cyvl MCP has 237,000 street-level images of Boston, all searchable by natural language. No model was trained for these searches — it works for anything visible in the photos.
+The Cyvl MCP leverages data from hundreds of thousands street-level images of Boston, all searchable by natural language. No model was trained for these searches — it works for anything visible in the photos.
 
-### 1a. Find fire hydrants
+### 1a. Find Bus Stops
 
 ```
-Search for "fire hydrants" imagery in the Boston project. Download three of them to results/fire_hydrants/.
+Search for "bus stop" imagery in the Boston project. Download three of them to results/bus_stops/.
 ```
 
 This is the highest-confidence query — concrete, well-defined objects return the most reliable results.
