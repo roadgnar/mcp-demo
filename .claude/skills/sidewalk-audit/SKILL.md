@@ -1,7 +1,7 @@
 ---
 name: sidewalk-audit
 description: Audit sidewalk and curb conditions using imagery search. Use when the user asks about sidewalks, curbs, ADA compliance, or pedestrian infrastructure.
-allowed-tools: mcp__cyvl__*, mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*
+allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*
 argument-hint: [neighborhood or "citywide"]
 ---
 

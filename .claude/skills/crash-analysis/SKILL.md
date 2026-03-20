@@ -1,7 +1,7 @@
 ---
 name: crash-analysis
 description: Analyze car crash data from Vision Zero and correlate with pavement conditions. Use when the user asks about crashes, dangerous streets, or road safety.
-allowed-tools: mcp__cyvl__*, mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*
+allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*
 argument-hint: [street name or neighborhood, e.g. "Blue Hill Ave", "Dorchester"]
 ---
 

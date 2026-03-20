@@ -1,13 +1,22 @@
 # MCP Demo — Boston Infrastructure Intelligence
 
-Explore Boston's infrastructure through two MCP servers working together in Claude Code. Search 237K street-level images by natural language, query crash records, 311 complaints, pavement conditions, and construction data — then combine them for insights no single source can provide.
+Answer any question about your city's infrastructure — find safety hazards invisible to existing databases, generate reports backed by street-level evidence, build prioritized repair lists that combine crash data with pavement conditions. Powered by two MCP-connected data sources: Cyvl (AI infrastructure intelligence) and Boston Open Data (city records).
+
+## Why This Matters
+
+- **Find infrastructure issues not in any database** — zero-shot visual search across street-level imagery
+- **Join city data sources that have never been connected** — crashes + pavement + complaints in one query
+- **Generate stakeholder-ready reports in minutes, not days**
+- **Build custom tools on demand** — compliance checkers, repair prioritizers, field survey apps
 
 ## Prerequisites
 
 **Required:**
 - **Claude account**: Pro, Max, Teams, or Enterprise (free plan does not include Claude Code)
 - **Claude Code**: Installed and authenticated (see [Install Claude Code](#install-claude-code) below)
+- **Cyvl account**: Required for infrastructure data and imagery (ask your team for access)
 - **Node.js 18+**: Needed for the Boston Open Data MCP connection (`npx mcp-remote`)
+  Install from [nodejs.org](https://nodejs.org/) or via `brew install node` (macOS) / `winget install OpenJS.NodeJS` (Windows)
 
 **Optional (for PDF report generation):**
 - **Google Chrome or Chromium** — used for HTML-to-PDF conversion via headless mode. Most systems already have this. If not:
@@ -65,7 +74,7 @@ Run `claude` — a browser window opens for OAuth login. Log in with your Claude
 
 ```bash
 # 1. Clone the repo
-git clone <repo-url>
+git clone https://github.com/roadgnar/mcp-demo.git
 cd mcp-demo
 
 # 2. Open Claude Code
@@ -73,7 +82,7 @@ claude
 
 # 3. Connect the Cyvl MCP (one-time)
 /mcp
-# Click "Cyvl" → follow the OAuth prompt → authenticate
+# Click "Cyvl" → log in with your Cyvl account when the browser opens → authenticate
 ```
 
 The **Boston Open Data MCP** auto-connects via `.mcp.json` — no auth needed (public data).
@@ -91,7 +100,7 @@ Search for "fire hydrants" in Boston and show me 3 images
 | `CLAUDE.md` | General-purpose tool guide — describes both MCPs, datasets, SQL gotchas, spatial queries, error handling | Auto-loaded every session |
 | `.mcp.json` | Connects the Boston Open Data MCP automatically | Auto-loaded every session |
 | `.claude/settings.json` | Pre-approves MCP tool permissions (no popups) | Auto-loaded every session |
-| `.claude/skills/` | 5 reusable workflows invoked via `/` commands | On demand |
+| `.claude/skills/` | 6 reusable workflows invoked via `/` commands | On demand |
 | `FOLLOW-ALONG.md` | Step-by-step demo walkthrough with copy-paste prompts and expected results | Read when running the demo |
 | `prompts/` | Prompt recipe collections organized by use case | Reference |
 | `reference/` | Tool docs, dataset schemas, spatial filter examples, neighborhood coordinates | Reference |
@@ -112,6 +121,19 @@ Search for "fire hydrants" in Boston and show me 3 images
 | `/infrastructure-report` | Generate stakeholder-ready reports |
 | `/explore-dataset` | Browse and query Boston open data |
 | `/generate-report` | Generate PDF report/slides from infrastructure data |
+
+## How It Works
+
+```mermaid
+graph LR
+    User[You / Claude Code] -->|MCP| Cyvl[Cyvl MCP]
+    User -->|MCP| Boston[Boston Open Data MCP]
+    User -->|MCP| Your[Your MCP Server]
+    Cyvl --> Images[237K Street Images]
+    Cyvl --> Pavement[PCI Scores]
+    Boston --> Crashes[Vision Zero Crashes]
+    Boston --> Complaints[311 Complaints]
+```
 
 ## Running the Demo
 
@@ -137,6 +159,52 @@ Search for "fire hydrants" in the Boston project. How many did you find?
 ```
 
 Subsequent calls are fast.
+
+## Extending This Repo
+
+### Add a new MCP server
+
+Edit `.mcp.json` to add another data source. The format is:
+
+```json
+{
+  "mcpServers": {
+    "your-server-name": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://your-server-url/sse"]
+    }
+  }
+}
+```
+
+For example, to add Cambridge open data:
+
+```json
+{
+  "cambridge": {
+    "command": "npx",
+    "args": ["mcp-remote", "https://data.cambridgema.gov/mcp/sse"]
+  }
+}
+```
+
+### Use a different city's Cyvl project
+
+The Boston project ID is hardcoded in `CLAUDE.md`. To switch to a different city:
+
+1. Run `list_projects` in Claude Code to discover available projects
+2. Find the project ID for your city
+3. Update the project ID in `CLAUDE.md`
+
+### Create a custom skill
+
+1. Create a new folder in `.claude/skills/` (e.g., `.claude/skills/my-skill/`)
+2. Add a `SKILL.md` file describing what the skill does, its inputs, and step-by-step instructions
+3. Claude Code will pick it up automatically — invoke it with `/my-skill`
+
+### MCP beyond Claude Code
+
+MCP is a protocol — any AI client that supports the Model Context Protocol can connect to these servers, not just Claude Code. If your team uses other MCP-compatible tools, they can use the same `.mcp.json` configuration.
 
 ## Example Prompts
 
@@ -165,7 +233,7 @@ See `prompts/` for more organized by use case.
 | Problem | Fix |
 |---------|-----|
 | Cyvl MCP not connected | Run `/mcp` inside Claude Code, click Cyvl, complete OAuth |
-| Boston MCP not connected | Check `.mcp.json` is present. Run `/mcp` to verify. Ensure `npx` is available (comes with Node.js). |
+| Boston MCP not connected | Check `.mcp.json` is present. Run `/mcp` to verify. Install Node.js 18+ from [nodejs.org](https://nodejs.org/) — `npx` is included automatically. |
 | 502 Bad Gateway on Cyvl call | Retry once — these are transient proxy errors that resolve immediately |
 | `list_distresses` times out | Reduce radius to 100m, or use `search_imagery` instead (never times out) |
 | SQL column name error | Column names are case-sensitive on some datasets. Always check schema first. |
@@ -184,7 +252,8 @@ mcp-demo/
 │       ├── crash-analysis/SKILL.md    # /crash-analysis
 │       ├── sidewalk-audit/SKILL.md    # /sidewalk-audit
 │       ├── infrastructure-report/SKILL.md
-│       └── explore-dataset/SKILL.md   # /explore-dataset
+│       ├── explore-dataset/SKILL.md   # /explore-dataset
+│       └── generate-report/SKILL.md   # /generate-report
 ├── FOLLOW-ALONG.md                    # Step-by-step demo walkthrough
 ├── prompts/                           # Prompt recipe collections
 │   ├── imagery-search.md

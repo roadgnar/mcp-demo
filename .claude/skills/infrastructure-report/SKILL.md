@@ -1,7 +1,7 @@
 ---
 name: infrastructure-report
-description: Generate a report or presentation about infrastructure conditions. Use when the user asks for a report, presentation, summary, or deliverable.
-allowed-tools: mcp__cyvl__*, mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, Bash, Write, Read
+description: Analyze infrastructure conditions for a specific area — data gathering and synthesis, no file output. Use when the user asks to analyze, assess, or investigate conditions.
+allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, Bash, Write, Read
 argument-hint: [topic and area, e.g. "pavement conditions on Main Street"]
 ---
 

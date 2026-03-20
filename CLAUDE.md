@@ -22,7 +22,7 @@ Use `list_projects` to discover available projects. Other cities in the Cyvl sys
 3. Use `search_id` from step 1 to paginate without re-running the search
 
 ### Boston Open Data MCP (`boston`)
-City of Boston's open data portal (data.boston.gov). CKAN-based.
+City of Boston's open data portal (data.boston.gov).
 - **6 tools** — search datasets, get dataset details, get schema, query data, aggregate data, execute SQL
 
 **Always start with:** `search_datasets("topic")` to find what exists, then `get_dataset` for resource IDs, then `get_schema` before querying.
@@ -51,7 +51,7 @@ When the user asks a question that spans both data sources:
 
 ### Spatial Queries (Cyvl)
 All `list_*` tools need `project_id` plus either:
-- `bbox`: `[west, south, east, north]` in WGS84
+- `bbox`: `[west, south, east, north]`
 - `radius`: `{"lat": 42.36, "lng": -71.06, "meters": 300}`
 
 Use `geocode_location` to convert place names. Keep radius at 500m or below to avoid timeouts.
@@ -75,6 +75,9 @@ Do NOT mix these up. `search_imagery` uses `lon`, the `list_*` tools use `lng`.
 
 - **Cyvl timeout:** If any `list_*` call times out, reduce `radius.meters` to 100m and retry. If still failing, switch to `search_imagery` for that area — imagery search never times out.
 - **Cyvl 502 errors:** These are transient proxy errors. Retry once — they almost always succeed on the second attempt.
+- **Cyvl MCP unreachable / auth expired:** If ALL Cyvl calls fail with connection or auth errors, tell the user: "The Cyvl MCP connection needs to be re-authenticated. Run /mcp and re-connect Cyvl." Do not retry repeatedly.
+- **Boston MCP unreachable:** If ALL Boston Open Data calls fail, tell the user: "The Boston Open Data MCP is not responding. Check the connection with /mcp." Continue with Cyvl-only analysis if possible.
+- **Both imagery and distress calls fail for an area:** Fall back to `list_pavement_scores` (fastest Cyvl call). If that also fails, report the outage and move to the next topic.
 - **Boston Open Data SQL errors:** ALWAYS call `get_schema` before writing SQL. If a column name error occurs, re-check the schema and retry with correct casing.
 - **Empty results:** If a spatial query returns empty, widen the radius by 50% and retry once. If still empty, report "no data in this area."
 
@@ -82,7 +85,7 @@ Do NOT mix these up. `search_imagery` uses `lon`, the `list_*` tools use `lng`.
 
 - **`execute_sql`** — use for ALL queries on Active Work Zones (PascalCase columns break `aggregate_data`). Also use for complex joins, ILIKE filters, and any query where column names are case-sensitive.
 - **`aggregate_data`** — use for simple GROUP BY on datasets with lowercase columns (crashes, 311 legacy, permits). Faster than raw SQL.
-- **`query_data`** — use ONLY for sampling rows (with `limit`, no filters). Filters fail on most datasets. Always prefer `execute_sql` with WHERE clauses for filtered queries.
+- **`query_data`** — use for sampling rows with `limit` (no filters). Filters use exact match only and fail on some datasets — prefer `execute_sql` with WHERE clauses for reliable filtering.
 - **`get_schema`** — ALWAYS call before any query on a new resource. Non-negotiable.
 
 ## 311 Data Warning

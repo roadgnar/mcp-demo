@@ -1,7 +1,7 @@
 ---
 name: generate-report
-description: Generate a PDF infrastructure report with data from both MCPs. Use when the user asks for a report, deliverable, presentation, or PDF.
-allowed-tools: mcp__cyvl__*, mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, Write, Read, Bash
+description: Generate a PDF, HTML file, or written deliverable. Use when the user asks for a report, PDF, presentation, or document they can share.
+allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, Write, Read, Bash
 argument-hint: [topic, e.g. "pavement safety on Washington St"]
 ---
 

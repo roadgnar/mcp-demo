@@ -1,7 +1,7 @@
 ---
 name: search-imagery
 description: Search street-level imagery by natural language. Use when the user wants to find objects, scenes, or conditions in street photos.
-allowed-tools: mcp__cyvl__*, mcp__claude_ai_Cyvl__*
+allowed-tools: mcp__claude_ai_Cyvl__*
 argument-hint: [search query, e.g. "bus stops", "cracked sidewalks"]
 ---
 

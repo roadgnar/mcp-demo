@@ -22,6 +22,7 @@ Search and query datasets from data.boston.gov.
 - Column names may be case-sensitive — always check schema first
 - `EXTRACT()` is blocked — use `left(field, N)` for date parts
 - Filters in `query_data` are simple key-value: `{"field": "value"}`
+- `query_data` filters use exact match only and fail on some datasets — prefer `execute_sql` with WHERE clauses for reliable filtering
 - For GROUP BY with `aggregate_data`, columns must be lowercase unless the schema says otherwise
 - Active Work Zones uses PascalCase columns: `"Neighborhood"`, `"Project_Category"`
 
