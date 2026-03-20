@@ -1,0 +1,11 @@
+# Claude Code personal settings (auto-gitignored by Claude, but be explicit)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Examples output (may contain large files)
+examples/*.pdf
+examples/*.png
+examples/*.jpg

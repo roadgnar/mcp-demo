@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "boston": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote",
+        "https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp"
+      ]
+    }
+  }
+}
