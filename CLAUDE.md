@@ -170,10 +170,10 @@ Key columns: `"Neighborhood"`, `"Street"`, `"Project_Category"`, `"Status"`, `"E
 
 ## Civic AI Tools Framework
 
-This repo includes [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) by @npstorey as a subtree in `civic-ai-tools/`. Key resources:
+This repo integrates [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) by **Nick Storey (@npstorey)** as a subtree in `civic-ai-tools/`. The Socrata MCP server (by **Scott Robbin**) automatically delivers civic-ai-tools' skill guidance via its `prompts/get` endpoint — this includes anti-hallucination rules, query complexity assessment, and SoQL patterns.
 
-- `civic-ai-tools/docs/datasets.md` — Curated 5-city dataset directory with verified IDs
-- `civic-ai-tools/docs/skills/base.md` — Anti-hallucination framework, SoQL patterns
+Key resources for reference:
+- `civic-ai-tools/docs/datasets.md` — Curated 5-city dataset directory with verified IDs (NYC, Chicago, SF, Seattle, LA)
+- `civic-ai-tools/docs/skills/base.md` — Anti-hallucination framework, mandatory column discovery, date range guidelines
 - `civic-ai-tools/docs/mcp-servers.md` — Directory of 50+ civic MCP servers worldwide
-
-To update: `git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-tools.git main --squash`
+- `civic-ai-tools/CONTRIBUTING.md` — How to contribute back to the upstream project

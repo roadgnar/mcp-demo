@@ -32,16 +32,32 @@ See your city's infrastructure through AI. Cyvl searches 237K+ street-level imag
 ## How It Works
 
 ```mermaid
-graph LR
-    User[You / Claude Desktop or Code] -->|MCP| Cyvl[Cyvl MCP]
-    User -->|MCP| Socrata[Socrata MCP]
-    User -->|MCP| DC[Data Commons MCP]
-    User -->|MCP| Boston[Boston CKAN MCP]
-    Cyvl --> Images[Street-Level Imagery]
-    Cyvl --> Pavement[PCI Scores + Distresses]
-    Socrata --> OpenData[Any Socrata Portal]
-    DC --> Stats[Demographics + Census]
-    Boston --> BostonData[Boston City Records]
+graph TD
+    User[You / Claude Desktop or Code]
+
+    User -->|MCP| Cyvl["Cyvl MCP\n(AI Infrastructure Intelligence)"]
+    User -->|MCP| Socrata["Socrata MCP\n(via civic-ai-tools)"]
+    User -->|MCP| DC["Data Commons MCP\n(Google)"]
+    User -->|MCP| Boston["Boston CKAN MCP"]
+
+    subgraph "Cyvl — The Star"
+        Cyvl --> Images["237K+ Street-Level Images\nNatural Language Search"]
+        Cyvl --> Pavement["PCI Scores + Distresses\nSigns + Markings + Assets"]
+    end
+
+    subgraph "civic-ai-tools Framework"
+        Socrata --> NYC["NYC Open Data\n311 / Restaurants / Housing"]
+        Socrata --> Multi["Chicago / SF / Seattle / LA"]
+        Socrata -.->|"skill guidance\nanti-hallucination"| Skills["docs/skills/base.md\n(query patterns + safety)"]
+    end
+
+    subgraph "Demographics"
+        DC --> Census["Census / UN / WHO / CDC\nPopulation + Income + Crime"]
+    end
+
+    subgraph "Boston City Data"
+        Boston --> BostonData["Vision Zero Crashes\n311 / Work Zones / Permits"]
+    end
 ```
 
 ## Prerequisites
@@ -221,19 +237,33 @@ See `prompts/` for more organized by use case.
 
 ## Civic AI Tools
 
-This repo includes [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) by **Nick Storey ([@npstorey](https://github.com/npstorey))** as a git subtree in `civic-ai-tools/`. It provides anti-hallucination skill guidance, curated dataset directories for 5 cities, 50+ civic MCP server registry, and SoQL query patterns.
+This repo integrates [**civic-ai-tools**](https://github.com/npstorey/civic-ai-tools) by **Nick Storey ([@npstorey](https://github.com/npstorey))** as a git subtree in `civic-ai-tools/`. civic-ai-tools is the open-source framework that makes AI + civic open data reliable:
 
-The Socrata MCP server (by **Scott Robbin**) is used via `npx socrata-mcp-server --stdio`.
+- **Anti-hallucination skill guidance** — rules enforced by the Socrata MCP server via `prompts/get` to prevent fabricated data, enforce column discovery, and gate query complexity
+- **Curated dataset directories** — verified dataset IDs across NYC, Chicago, SF, Seattle, and LA (`civic-ai-tools/docs/datasets.md`)
+- **50+ MCP server registry** — directory of civic data MCP servers worldwide (`civic-ai-tools/docs/mcp-servers.md`)
+- **SoQL query patterns** — case-sensitivity rules, date handling, spatial filters, error recovery (`civic-ai-tools/docs/skills/base.md`)
+- **Multi-IDE setup automation** — config generation for Claude Code, Cursor, VS Code, Codex, and GitHub Codespaces
 
-To update: `git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-tools.git main --squash`
+The **Socrata MCP server** (by **Scott Robbin**, [socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server)) powers all Socrata portal queries via `npx socrata-mcp-server --stdio`. It delivers the civic-ai-tools skill guidance automatically through the MCP protocol.
+
+To update civic-ai-tools to latest:
+```bash
+git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-tools.git main --squash
+```
 
 ## Resources
 
-- [Claude Desktop Download](https://claude.ai/download)
-- [Claude Code Setup Guide](https://code.claude.com/docs/en/setup)
-- [Cyvl MCP Documentation](https://i3.cyvl.dev/docs)
-- [Boston Open Data Portal](https://data.boston.gov)
-- [NYC Open Data Portal](https://data.cityofnewyork.us)
-- [Google Data Commons](https://datacommons.org)
-- [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) — Upstream framework by @npstorey
-- [MCP Best Practices (Anthropic)](https://www.anthropic.com/engineering/writing-tools-for-agents)
+**Tools:**
+- [Cyvl](https://i3.cyvl.dev/docs) — AI infrastructure intelligence (street imagery + pavement + signs)
+- [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) — Open-source framework by Nick Storey ([@npstorey](https://github.com/npstorey))
+- [socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server) — Socrata MCP by Scott Robbin
+- [Data Commons](https://datacommons.org) — Google's unified statistical knowledge graph
+
+**Data Portals:**
+- [NYC Open Data](https://data.cityofnewyork.us) — Socrata-powered, 2,000+ datasets
+- [Boston Open Data](https://data.boston.gov) — CKAN-powered, Analyze Boston
+- [Chicago Open Data](https://data.cityofchicago.org) | [SF Open Data](https://data.sfgov.org) | [Seattle Open Data](https://data.seattle.gov)
+
+**Claude:**
+- [Claude Desktop](https://claude.ai/download) | [Claude Code](https://code.claude.com/docs/en/setup) | [MCP Best Practices](https://www.anthropic.com/engineering/writing-tools-for-agents)
