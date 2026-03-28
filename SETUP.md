@@ -99,35 +99,74 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup-civic.ps1 -Check
 
 The script is idempotent — safe to run multiple times.
 
-## Step 4: Connect Cyvl MCP
+## Step 4: Open the Project + Connect Cyvl
 
-Cyvl uses OAuth authentication, so it connects separately from the API-key-based servers.
+### Option A: Claude Desktop (Cowork) — Recommended
 
-- **Claude Desktop:** Open the MCP connectors panel, search "Cyvl", click Connect, and complete the OAuth login
-- **Claude Code:** Run `/mcp`, click Cyvl, and complete the OAuth flow
+1. Open **Claude Desktop**
+2. Click the **Cowork** tab (bottom-left)
+3. Click **"Select folder"** and choose the **`mcp-demo`** folder you cloned
+4. Verify you're **scoped to the mcp-demo repo** — you should see `CLAUDE.md` referenced in the session. If you see a different project's files, re-select the correct folder.
+5. The **Socrata**, **Data Commons**, and **Boston CKAN** MCPs auto-connect from `.mcp.json` — no action needed
+6. Connect **Cyvl** (one-time OAuth):
+   - Open the **MCP connectors** panel (plug icon in the sidebar)
+   - Search for **"Cyvl"**
+   - Click **Connect** and log in with your Cyvl account
+   - Authorize access when prompted
 
-This is a one-time step per device. After connecting, Cyvl stays authenticated across sessions.
+### Option B: Claude Code (Terminal)
 
-## Step 5: Verify
+1. Open your terminal
+2. Navigate to the mcp-demo repo:
+   ```bash
+   cd mcp-demo
+   ```
+3. Launch Claude Code **from inside the repo folder**:
+   ```bash
+   claude
+   ```
+4. The Socrata, Data Commons, and Boston CKAN MCPs auto-connect
+5. Connect Cyvl (one-time OAuth):
+   ```
+   /mcp
+   ```
+   Click **Cyvl** in the list and complete the OAuth login
 
-Open Claude and try:
+## Step 5: Verify Everything Works
+
+### Test Cyvl (the star — AI imagery search)
 
 ```
 Search for "fire hydrants" and show me 3 images
 ```
 
-- If Cyvl returns street-level imagery, the Cyvl connection is working
-- If open data queries return results, Socrata and Data Commons are connected
+**Expected:** Cyvl returns street-level photos with GPS coordinates and confidence scores. If this works, Cyvl is connected and your project access is confirmed.
 
-You can also test individual servers:
+### Test Socrata (open data)
 
 ```
-What datasets are available on data.boston.gov about permits?
+What are the top 5 complaint types in NYC 311 this week?
 ```
+
+**Expected:** Returns a ranked list of complaint types with counts from the NYC Open Data portal.
+
+### Test Data Commons (demographics)
 
 ```
 What is the population of New York City?
 ```
+
+**Expected:** Returns ~8.5 million (2024 Census) with source citation.
+
+### Test Boston CKAN
+
+```
+How many pedestrian crashes has Boston had this year?
+```
+
+**Expected:** Returns a count from the Vision Zero crash dataset.
+
+If any test fails, check the [Troubleshooting](#troubleshooting) section below.
 
 ## Claude Desktop Config (Manual)
 
