@@ -6,7 +6,7 @@ Turn analysis into stakeholder-ready PDF reports with real street-level photos e
 
 > Create a PDF report about infrastructure conditions on [street]. Search for street-level imagery of any damage, download the photos, and embed them in the report. Include crash data, pavement scores, and a repair recommendation. Save to results/[topic]/.
 
-> Write a report on the most dangerous streets in Boston. For each street, include a downloaded street-level photo showing conditions. Save to results/dangerous-streets/.
+> Write a report on the most dangerous streets in Jackson Heights, Queens. For each street, include a downloaded street-level photo showing conditions. Save to results/dangerous-streets/.
 
 > Generate a sidewalk conditions report for [neighborhood]. Find cracked sidewalks in imagery, download examples, cross-reference with 311 complaints. Save to results/[neighborhood]-sidewalks/.
 

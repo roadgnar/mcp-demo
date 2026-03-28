@@ -4,7 +4,7 @@ Natural language search over 237K street-level images. No pre-trained model need
 
 ## Basic Object Search
 
-> Search for fire hydrants in Boston — how many can you find? Show me 3 images.
+> Search for fire hydrants in Queens — how many can you find? Show me 3 images.
 
 (High confidence — concrete, well-defined objects like hydrants return the most reliable results.)
 
@@ -12,7 +12,7 @@ Natural language search over 237K street-level images. No pre-trained model need
 
 (Good confidence — distinctive objects with clear visual features.)
 
-> Show me fire hydrants near Beacon Hill
+> Show me fire hydrants near Jackson Heights
 
 ## Ad-Hoc Discovery (Things NOT in Structured Data)
 
@@ -20,7 +20,7 @@ Natural language search over 237K street-level images. No pre-trained model need
 
 > Find dumpsters on residential streets
 
-> Show me art murals and street art in Boston
+> Show me art murals and street art in Queens
 
 > Find food trucks
 
@@ -36,7 +36,7 @@ Natural language search over 237K street-level images. No pre-trained model need
 
 ## Compound Queries (Object + Location + Condition)
 
-> Search for cracked sidewalks near schools in Dorchester
+> Search for cracked sidewalks near schools in Jamaica, Queens
 
 > Find damaged road surfaces near intersections with high pedestrian traffic
 
@@ -44,11 +44,11 @@ Natural language search over 237K street-level images. No pre-trained model need
 
 ## Fun / Memorable (Great for Live Demos)
 
-> Find dogs in Boston
+> Find dogs in Queens
 
 (High volume, fun reaction — but confidence is moderate since dogs are varied and small in frame.)
 
-> Search for graffiti in Boston
+> Search for graffiti in Queens
 
 (Surprising results — abstract concepts like graffiti work better than expected.)
 
