@@ -1,297 +1,152 @@
-# Boston Infrastructure Intelligence — Follow Along
+# Infrastructure Intelligence -- Hands-On Demo
 
-> **Try it yourself.** Copy-paste these prompts into Claude Code and see the results live. Each section builds on the last — start from the top or jump to any section that interests you.
+**Use AI to see, explore, and analyze civic infrastructure data.**
 
-If you haven't already, clone the repo first — see the [Quick Start in README.md](README.md#quick-start).
+> Copy-paste the prompts below into Claude and see the results live. Each part builds on the last, but you can jump to any section.
 
 ---
 
-## Setup (One-Time)
+## Setup
 
-### Step 1: Open the project
+**Desktop:** Open Claude Desktop, start a Cowork session scoped to the `mcp-demo` repo.
 
-**Desktop:**
-
-1. Open Claude Desktop
-2. Open Cowork and scope to the `mcp-demo` repo
-3. (Optional) Tell Claude to read over and understand the repo
-4. Get cooking!
-
-**Code:**
+**Terminal:**
 
 ```bash
 cd mcp-demo
 claude
 ```
 
-The **Boston Open Data MCP** auto-connects via `.mcp.json` — it's public data, no auth needed.
+The **Socrata** and **Data Commons** MCP servers connect automatically via npx/uvx -- no keys needed.
 
-### Step 2: Authenticate the Cyvl MCP
+The **Cyvl** MCP requires a one-time OAuth login. Run `/mcp` inside Claude Code, click Cyvl, and follow the prompt. Future sessions remember your auth.
 
-Inside Claude Code, type:
-
-```
-/mcp
-```
-
-You'll see a list of MCP servers. The Boston server should show as connected. For Cyvl:
-
-1. Click on **"Cyvl"** in the MCP list
-2. Follow the OAuth prompt to authenticate with your Cyvl account
-3. Once authenticated, the Cyvl MCP shows as connected
-
-This is a **one-time** step. Future sessions remember your authentication.
-
-### Step 3: Verify
-
-```
-/mcp
-```
-
-You should see both servers connected:
-
-- **boston** — Boston Open Data (CKAN)
-- **Cyvl** — Infrastructure data + imagery search
+For city-specific datasets, neighborhoods, and resource IDs, check the city branches:
+- `git checkout boston` -- Boston walkthrough with CKAN datasets
+- `git checkout nyc` -- NYC walkthrough with Socrata datasets
 
 ---
 
-## Part 1: Imagery Search — "Search for Anything"
+## Part 1: See Your City
 
-The Cyvl MCP leverages data from hundreds of thousands street-level images of Boston, all searchable by natural language. No model was trained for these searches — it works for anything visible in the photos.
+Cyvl has indexed over 237,000 street-level images, all searchable by natural language. No model was trained for these queries -- it works for anything visible in the photos. This is the opening act.
 
-### 1a. Find Bus Stops
+> Search for fire hydrants
 
-```
-Search for "bus stop" imagery in the Boston project. Download three of them to results/bus_stops/.
-```
+**Expected:** Thousands of results across the full image set. The AI returns metadata first (count, locations, confidence scores), then downloads sample photos on request. A concrete noun like "fire hydrant" returns the highest confidence.
 
-This is the highest-confidence query — concrete, well-defined objects return the most reliable results.
+> Show me cracked sidewalks near intersections
 
-### 1b. Find faded crosswalk markings
+**Expected:** The AI finds sidewalk damage with confidence scores and GPS coordinates. No city maintains a sidewalk condition database -- this is the only way to inventory damage at scale.
 
-```
-Search for "faded crosswalk markings" imagery in Boston. Download three of them to results/faded_crosswalk_markings/.
-```
+> Find faded crosswalk markings
 
-Safety-critical marking degradation quantified across the entire city.
+**Expected:** Crosswalk markings with fading severity assessment. Safety-critical marking degradation that no spreadsheet tracks, quantified across hundreds of miles.
 
-### 1c. Find cracked sidewalks
+> Search for bus stops with benches
 
-```
-Search for "cracked sidewalks and damaged curbs" imagery across Boston.  Download three of them to results/cracked_sidewalks/.
-```
+**Expected:** Precise object detection across street photos -- benches, shelters, signage. The search generalizes to any visible feature without retraining.
 
-Boston has no sidewalk condition data — this is the only way to inventory sidewalk conditions at scale.
+> Find construction equipment near roadways
 
-### 1d. Find construction sites
+**Expected:** Active construction activity visible in photos, independent of any permit database. Compare what imagery shows to what the city officially tracks.
 
-```
-Search for "construction sites with heavy machinery" imagery in Boston. Download three of them to results/construction_sites/.
-```
-
-Construction activity visible in street-level photos — independent of the city's permit database. Try removing "with heavy machinery" to see how qualifiers narrow results.
-
-### 1e. Find Blue Bike stations
-
-```
-Search for "blue bike docking stations" imagery in the Boston project and tell me show many you found. Download three of them to results/blue_bike_stations/.
-```
-
-These stations aren't in any structured dataset — found purely from imagery.
-
-### 1f. The fun one — find dogs
-
-```
-Search for "dogs" in the Boston street imagery. Download three of them to results/dogs/.
-```
-
-If we can find dogs, we can find anything. (Note that some dogs are obscured by anonymization, for the dog's privacy.)
+Cyvl sees things that no city dataset contains. This is infrastructure intelligence from AI vision -- not from a spreadsheet.
 
 ---
 
-## Part 2: Cross-MCP Analysis — Filling Data Gaps
+## Part 2: Explore the Data
 
-The Boston Open Data MCP connects to data.boston.gov — hundreds of city datasets on everything from crashes to building permits. But what happens when the data you need doesn't exist?
+Use `/explore` to discover what open data exists -- no portal browsing, no dataset IDs, just plain English.
 
-### 2a. Show what exists (and what's missing)
+> What data does this city have about 311 complaints?
 
-```
-Search the Boston Open Data portal for any dataset about sidewalks or curb conditions.
-```
+**Expected:** The AI searches the relevant open data portal (Socrata, CKAN, or both) and returns matching datasets with descriptions, record counts, and column names. You see what exists without visiting a single website.
 
-You'll find geometry data from 2011 — the city knows WHERE sidewalks are but not what CONDITION they're in. This is a real gap in the city's data.
+> Show me population trends for the 5 largest US cities
 
-### 2b. Fill the gap with imagery
+**Expected:** Data Commons returns population time series from the Census Bureau for NYC, LA, Chicago, Houston, and Phoenix. Sourced data with citations -- not estimates.
 
-```
-Since Boston has no sidewalk condition data, use Cyvl imagery search to find "cracked sidewalks and damaged curbs" across the city. Then search for "wheelchair accessible ramp with tactile paving." How many of each did you find?
-```
+> What restaurant inspection data is available?
 
-The city has no structured data on sidewalk conditions — but Cyvl's imagery search just created an inventory from street-level photos. Two data sources, one answer.
+**Expected:** The AI finds inspection datasets on the relevant Socrata portal, shows grade distributions (A/B/C), and surfaces recent failures. Works for any city with a Socrata-powered data portal.
 
-### 2c. Find accessibility obstructions
+> What kinds of housing or building violations are tracked?
 
-```
-Search for "narrow sidewalk blocked by utility pole" in Boston imagery. Download three of them to results/blocked_sidewalk/.
-```
+**Expected:** The AI discovers violation datasets, breaks down violation types by frequency, and shows the most common categories. The specifics depend on the city, but the discovery pattern is the same everywhere.
 
-ADA compliance issues that no city database tracks, found instantly from imagery.
-
-### 2d. Cross with 311 complaints
-
-```
-Query 311 service requests for sidewalk-related complaints. How many "Sidewalk Repair" requests are there in the 2026 data? Corroborate that with Cyvl's pavement data and imagery. Write a markdown report and download 3 images to results/sidewalk_repair/. 
-```
-
-Citizens are reporting damage one at a time with no systematic way to prioritize — imagery search provides the city-wide view that individual complaints can't.
+Open data portals have thousands of datasets. AI helps you find the right one without knowing the dataset ID, the column names, or the query language.
 
 ---
 
-## Part 3: City Intelligence — Crashes Meet Pavement
+## Part 3: Find the Patterns
 
-Now for the real payoff. The city tracks crash records. Cyvl has pavement condition data. Nobody has ever connected the two. What happens when we ask whether bad roads and crashes are correlated?
+Use `/compare` to connect what Cyvl sees to what open data shows -- cross-MCP analysis that no single source can provide.
 
-### 3a. The most dangerous streets
+> Do crashes happen where pavement is worst?
 
-```
-Which streets have the most crashes in Boston? Query Vision Zero crash records grouped by street name.
-```
+**Expected:** The AI pulls crash records from open data, pavement condition scores from Cyvl, and cross-references by location. Streets with the worst pavement scores correlate with higher crash frequency. Two independent data sources, one finding.
 
-### 3b. Washington St — crashes and pavement
+> Compare 311 complaint patterns between two cities
 
-```
-Washington Street has the most crashes of any street in Boston. Using the Cyvl MCP, show me the pavement condition and high-severity distresses on Washington Street in Roxbury. Is there a connection between road quality and crashes?
-```
+**Expected:** The AI queries both cities' 311 data, normalizes complaint volumes by population using Data Commons, and presents a per-capita comparison. Apples-to-apples across different-sized cities.
 
-This is the question nobody could ask before — it requires joining crash data from Boston Open Data with pavement scores from Cyvl.
+> Do sidewalk complaints match what imagery shows?
 
-### 3c. Blue Hill Ave — the pedestrian story
+**Expected:** 311 sidewalk repair requests versus Cyvl sidewalk damage imagery -- a gap analysis. Citizens report damage one at a time; imagery search provides the city-wide view. The gaps reveal where residents have stopped reporting.
 
-```
-How many pedestrian and bike crashes have occurred on Blue Hill Avenue? Then search Cyvl imagery for "damaged road surface and potholes" near Blue Hill Avenue in Mattapan. Download three of them to results/blue_hill_ave/pedestrian/.
-```
+> Compare median household income across the 5 largest US cities
 
-### 3d. Visual evidence on Washington St
+**Expected:** Data Commons returns Census-sourced income data for each city, presented side by side with source citations. Demographic context for any infrastructure analysis.
 
-```
-Search Cyvl imagery for "damaged road surface" on Washington Street in Roxbury. Download three of them to results/washington_st/damaged_road_surface/.
-```
-
-### 3e. The 311 connection
-
-```
-Are there 311 pothole complaints on the same streets that have the most crashes? Query 311 service requests for pothole-related complaints in Dorchester and Roxbury.
-```
-
-Three independent data sources — crashes, pavement scores, and citizen complaints — all pointing at the same streets.
-
-### 3f. Build a prioritized repair list
-
-```
-Based on everything we've found, build me a prioritized repair list for the top 5 most dangerous streets in Boston. Rank by combined crash count and pavement severity. For each street, include: crash count by type, worst PCI score, dominant distress type, and one street-level photo.
-```
-
-This turns the analysis into a decision-support tool — the "so what" moment.
+AI imagery + open data + demographics = connections no single source reveals.
 
 ---
 
-## Part 4: Deliverable Generation
+## Part 4: Make the Case
 
-The budget office doesn't read dashboards — they read reports with photos. Let's turn the crash-pavement correlation into something you can hand to the mayor.
+Use `/report` to turn analysis into a deliverable you can hand to a decision-maker.
 
-```
-Create a PDF report showing the correlation between crash frequency and pavement condition on Washington Street. Search for street-level imagery of the damage, download the photos, and embed them in the report. Include crash data, pavement scores, and a repair recommendation. Save everything to results/washington_report/.
-```
+> Create a brief on road conditions for the public works director
 
-The key: Claude searches imagery, downloads real photos, and embeds them in the PDF — a question becomes a budget-justification artifact in two minutes.
+**Expected:** The AI gathers pavement scores, crash data, 311 complaints, and street-level photos, then generates an HTML report with findings, data tables, embedded images, and prioritized recommendations. Sources cited throughout.
 
----
+> Build a report comparing infrastructure complaints across two cities
 
-## Bonus: Imagery Search Heatmap
+**Expected:** A formatted document combining operational data (311, violations) with demographic context (income, population) -- the kind of analysis that normally takes a research team days.
 
-See imagery search results rendered geospatially on a map:
-
-1. Go to [cyvl.app](https://cyvl.app/) and log in
-2. Navigate to [cyvl.app/heatmap](https://cyvl.app/heatmap)
-3. Run a search — the results appear as density clusters across the city
-
-Try the same queries from Part 1 and see them visualized on the map.
-
-## Bonus: Tool Generation — Build a Custom Tool
-
-Claude Code can build working interactive tools from a natural language description. You describe the workflow, Claude writes and runs the code. This is what "MCP as a platform" looks like — custom applications built on demand using live infrastructure data.
-
-### ADA Compliance Checker
-
-```
-Build me a tool that shows ADA ramps from Cyvl imagery one by one. For each image, let me mark it as "compliant" or "non-compliant" with a note. After reviewing, generate a summary with the compliance rate.
-```
-
-### Pothole Triage Tool
-
-```
-Build me a tool that pulls pothole complaints from 311, shows street-level imagery for each location, and lets me assign a priority. Export the prioritized list as a CSV.
-```
-
-### Sign Condition Inspector
-
-```
-Build me a tool that shows stop signs in a neighborhood one by one from imagery. Let me rate each as good, damaged, or missing.
-```
-
-See `prompts/tool-generation.md` for more examples.
+From question to shareable deliverable in minutes -- with photos, data, and citations.
 
 ---
 
-## Explore On Your Own
+## What You Just Did
 
-Try these compound questions that use both MCPs:
+- **Searched** 237K street photos with natural language (Cyvl)
+- **Discovered** datasets across multiple portals without writing code (Socrata, CKAN)
+- **Connected** visual evidence to operational data across MCP servers
+- **Generated** a stakeholder-ready report with photos and citations
 
-```
-Which neighborhoods have the worst combination of high crash rates and poor pavement?
-```
+This is infrastructure intelligence: AI vision + open data + demographic context, unified through natural language.
 
-```
-Find streets where the city is actively doing construction. Are those the streets that need it most based on pavement scores?
-```
+---
 
-```
-Search for "school zones" in imagery, then check the pavement condition and crash history near each one.
-```
+## City-Specific Demos
 
-```
-Are there intersections with faded crosswalk markings that also have high pedestrian crash counts?
-```
+For walkthroughs with neighborhood-level prompts, specific dataset IDs, and local context:
 
-```
-Compare construction permits (Active Work Zones) with construction visible in imagery for the South End. Are there sites in imagery with no permits?
-```
+- **Boston:** `git checkout boston` -- see FOLLOW-ALONG-BOSTON.md
+- **NYC:** `git checkout nyc` -- see FOLLOW-ALONG-NYC.md
 
 ---
 
 ## Quick Reference
 
-### Cyvl MCP — Boston Project
-
-- **Project ID:** `8d8f8cd6-f25a-470c-88fd-6b0e0ad4d1d7`
-- **Coverage:** 882 miles, 237K embedded images
-- **Tools:** `search_imagery`, `list_pavement_scores`, `list_distresses`, `list_signs`, `assess_infrastructure`
-
-### Boston Open Data — Key Resource IDs
-
-
-| Dataset             | Resource ID                            |
-| ------------------- | -------------------------------------- |
-| Vision Zero Crashes | `e4bfe397-6bfc-49c5-9367-c879fac7401d` |
-| Active Work Zones   | `36fcf981-e414-4891-93ea-f5905cec46fc` |
-| 311 Requests (2026) | `1a0b420d-99f1-4887-9851-990b2a5a6e17` |
-| Building Permits    | `6ddcd912-32a0-43df-9908-63574f8c7e77` |
-
-
-### Tips
-
-- If a Cyvl call returns a 502 error, retry once — transient proxy errors resolve immediately.
-- Dense areas may timeout on `list_distresses` — use `search_imagery` as an alternative.
-- The first Cyvl call is slow (cold start). After warmup, everything is fast.
-- Street names are UPPERCASE in crash data: `'BLUE HILL AVE'` not `'Blue Hill Ave'`.
-
+| What | How |
+|------|-----|
+| Discover Cyvl cities | `list_projects(has_embeddings=true)` |
+| Find datasets | `/explore` -- searches portals by keyword |
+| View street imagery | `/see` -- searches and downloads photos |
+| Cross-reference sources | `/compare` -- joins data across MCPs |
+| Generate deliverables | `/report` -- produces HTML/PDF with citations |
+| Imagery coverage | See `reference/cyvl-coverage.md` |
+| Dataset directory | See `civic-ai-tools/docs/datasets.md` |

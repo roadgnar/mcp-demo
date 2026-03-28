@@ -1,6 +1,6 @@
-# Socrata MCP — NYC Open Data + Multi-City Reference
+# Socrata MCP — Multi-City Open Data Reference
 
-Server name: `socrata` | 3 tools | Default domain: `data.cityofnewyork.us`
+Server name: `socrata` | 3 tools | Works with any Socrata-powered portal
 
 ## Tools
 
@@ -20,13 +20,13 @@ Server name: `socrata` | 3 tools | Default domain: `data.cityofnewyork.us`
 | `data.sfgov.org` | Limited search | `search` may return NYC datasets instead of SF. Use `get_data` with known IDs. |
 | `data.lacity.org` | Query-only | Only `get_data` works. `search` and `fetch` fail. |
 
-## Key NYC Datasets
+## Dataset Discovery
 
-| Dataset | ID | Key Columns | Volume |
-|---------|----|-------------|--------|
-| 311 Service Requests | `erm2-nwe9` | `complaint_type`, `borough`, `created_date`, `closed_date` | ~10k records/day |
-| Restaurant Inspections | `43nn-pn8j` | `boro`, `grade`, `inspection_date`, `cuisine_description` | — |
-| Housing Violations | `wvxf-dwi5` | `boro`, `violationid`, `inspectiondate` | ~500-1k/day |
+Use `search` to find datasets on any portal. City-specific dataset catalogs are on city branches:
+- `git checkout nyc` → NYC 311, restaurant inspections, housing violations
+- `git checkout boston` → Vision Zero crashes, work zones, building permits
+
+For the full 5-city directory, see `civic-ai-tools/docs/datasets.md`.
 
 ## SoQL Query Patterns
 
