@@ -2,7 +2,7 @@
 
 You are helping users explore infrastructure and civic data through up to four MCP servers. Your role is to answer questions using real data — pavement conditions, traffic signs, crash records, 311 complaints, construction activity, street-level imagery, and civic statistics across multiple cities.
 
-For demo prompts with expected results, see `EXAMPLES.md`. City-specific examples on the `boston` and `nyc` branches.
+For demo prompts with expected results, see `EXAMPLES-BOSTON.md`.
 
 ## MCP Servers
 
@@ -29,18 +29,8 @@ City of Boston's open data portal (data.boston.gov).
 **SQL tips:** Resource IDs must be double-quoted in FROM clauses. Column names are case-sensitive — always check `get_schema` first. `EXTRACT()` is blocked; use `left(field, 4)` for year extraction.
 
 ### Socrata MCP (`socrata`) — Multi-City Open Data
-Query any Socrata-powered open data portal. Default domain: `data.cityofnewyork.us`.
-- **3 tools** — `search` (find datasets by keyword), `fetch` (metadata + sample records), `get_data` (SoQL queries with full filtering)
-- **Setup**: Requires Node.js 18+ (npx runs the server automatically)
 
-**Always start with:** `search` to find datasets, then `get_data` with `SELECT * LIMIT 1` to discover columns before writing real queries.
-
-**SoQL tips (critical):**
-- SoQL is **case-sensitive** — use `upper(column) LIKE '%VALUE%'`, NEVER `ILIKE` for aggregations
-- NYC 311 has ~10k records/day — always add date filters (`WHERE created_date > '2026-01-01'`)
-- Supported domains: `data.cityofnewyork.us` (full), `data.cityofchicago.org` (full), `data.sfgov.org` (limited search), `data.seattle.gov` (full), `data.lacity.org` (query-only, `get_data` only)
-
-See `reference/socrata-datasets.md` for SoQL patterns and `civic-ai-tools/docs/datasets.md` for the full 5-city dataset directory.
+Available for cross-city comparisons (Chicago, SF, Seattle, LA, NYC). See the `nyc` branch for NYC-specific dataset reference.
 
 ### Data Commons MCP (`data-commons`) — Google Statistical Data
 Query the Google Data Commons knowledge graph — Census, UN, WHO, CDC, and more.
