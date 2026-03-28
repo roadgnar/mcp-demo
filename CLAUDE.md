@@ -13,13 +13,12 @@ A standalone example for querying civic data using MCP servers:
 Run `./scripts/setup.sh` to install dependencies and verify configuration.
 
 **When the setup script reports missing API keys**, you MUST:
-1. Tell the user which keys are missing and share the sign-up links from the script output
-2. Ask the user to go get the keys and paste them into the chat
-3. Once the user provides the keys, re-run setup with the flags:
-   ```bash
-   ./scripts/setup.sh --socrata-token TOKEN --dc-api-key KEY
-   ```
-4. If the user wants to skip, that's fine — the tools still work with lower rate limits
+1. Explain that the MCP tools require API keys to function (Data Commons won't work at all, Socrata can't return data)
+2. Share the sign-up links from the script output for each missing key
+3. Tell the user to open the `.env` file in the project folder and paste their keys there — do NOT ask them to paste API keys into this chat
+4. Remind them that `.env` is a hidden file (Mac: Cmd+Shift+. in Finder; Windows: View > Show > Hidden items in File Explorer)
+5. Tell them to let you know when they've added their keys so you can re-run `./scripts/setup.sh`
+6. Mention that AI tools can read `.env` — these keys are low-risk (free public data APIs), but if they want to prevent it, they can add `{ "permissions": { "deny": ["Read(.env)"] } }` to `.claude/settings.local.json`
 
 See [docs/setup.md](docs/setup.md) for detailed instructions.
 
