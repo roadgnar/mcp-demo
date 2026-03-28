@@ -1,7 +1,7 @@
 ---
 name: generate-report
-description: Generate a PDF, HTML file, or written deliverable. Use when the user asks for a report, PDF, presentation, or document they can share.
-allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, Write, Read, Bash
+description: Generate a PDF, HTML file, or written deliverable from any available data source.
+allowed-tools: mcp__claude_ai_Cyvl__*, mcp__claude_ai_Boston_CIO_MCP__*, mcp__boston__*, mcp__socrata__*, mcp__data-commons__*, Write, Read, Bash
 argument-hint: [topic, e.g. "pavement safety on Washington St"]
 ---
 
@@ -21,12 +21,13 @@ google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo "N
 
 ## Workflow
 
-1. **Gather data** from both MCPs:
-   - **Crash data** (Boston Open Data): Vision Zero for the target street/area
+1. **Gather data** from the appropriate MCPs for the target city:
+   - **Crash data**: Boston → boston MCP (Vision Zero). NYC → socrata MCP (Motor Vehicle Collisions). Other Socrata cities → socrata MCP.
    - **Pavement data** (Cyvl): list_pavement_scores and/or list_distresses
    - **Imagery URLs** (Cyvl): search_imagery with `output="urls"` for embeddable image links
-   - **311 complaints** (Boston Open Data): relevant complaints for the area
-   - **Construction** (Boston Open Data): active work zones if relevant
+   - **311 complaints**: Boston → boston MCP. NYC → socrata MCP.
+   - **Demographics** (any city): data-commons MCP for population, income context
+   - **Construction**: Boston → boston MCP (work zones). NYC → socrata MCP.
 
 2. **Write an HTML report** with inline CSS — self-contained, no external dependencies:
 
@@ -63,7 +64,7 @@ google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo "N
 
 ## Report Structure
 
-- **Title** — topic, date, "Data from Cyvl MCP + Boston Open Data"
+- **Title** — topic, date, city name, "Data from Cyvl MCP + [city] Open Data"
 - **Executive Summary** — 2-3 sentences, the headline finding
 - **Key Metrics** — big numbers in large font (total crashes, worst PCI score, etc.)
 - **Crash Analysis** — data table with mode breakdown (MV, pedestrian, bike)
@@ -71,10 +72,10 @@ google-chrome --version 2>/dev/null || chromium --version 2>/dev/null || echo "N
 - **Visual Evidence** — embedded street-level imagery (use image URLs from search_imagery output="urls")
 - **311 Complaints** — citizen reports correlated with measured conditions
 - **Recommendations** — prioritized repair actions based on combined data
-- **Data Sources** — cite which MCP and resource each number came from
+- **Data Sources** — cite which MCP and city each number came from (e.g., "Boston CKAN", "NYC Socrata", "Data Commons")
 
 ## Notes
 - Use `output="urls"` for imagery — the URLs embed directly in HTML via `<img>` tags
 - Keep reports to 2-4 pages when printed
 - If a query fails or times out, note "Data unavailable" and continue
-- Every number must cite its source (Cyvl MCP or Boston Open Data)
+- Every number must cite its source (Cyvl MCP, Boston CKAN, NYC Socrata, or Data Commons)

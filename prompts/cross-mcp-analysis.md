@@ -37,3 +37,15 @@ These prompts use BOTH the Cyvl MCP and Boston Open Data MCP together. The AI jo
 - Cyvl tools accept `radius` filters with `lat`/`lng`/`meters`
 - Cross-MCP queries take longer — be patient with compound questions
 - Always note which data came from which source when presenting results
+
+## NYC + Boston Comparisons
+
+> Compare pothole complaints: NYC 311 via Socrata vs Boston 311 via CKAN. Which city has more per capita?
+
+> Which city has worse infrastructure complaints per capita -- NYC or Boston? Pull 311 totals from both and normalize by population from Data Commons.
+
+> Show crash hotspots in Boston (Vision Zero) alongside NYC's most-complained-about streets from 311. Where do the worst corridors compare?
+
+> Compare noise complaint patterns between NYC (Socrata 311) and Boston (CKAN 311). Which neighborhoods in each city are loudest?
+
+> How do housing violation rates in Brooklyn compare to housing code violations in Boston? Use Socrata for NYC and CKAN for Boston.

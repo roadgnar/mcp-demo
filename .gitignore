@@ -7,3 +7,8 @@ Thumbs.db
 
 # Results output
 results/*
+
+# Secrets — API keys (generated configs contain baked-in keys)
+.env.local
+.mcp.json
+.cursor/mcp.json

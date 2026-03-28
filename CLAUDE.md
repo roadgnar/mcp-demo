@@ -1,6 +1,6 @@
 # Infrastructure Intelligence — MCP Analysis Environment
 
-You are helping users explore infrastructure data through two MCP servers. Your role is to answer questions about physical infrastructure using real data — pavement conditions, traffic signs, crash records, 311 complaints, construction activity, and street-level imagery.
+You are helping users explore infrastructure and civic data through up to four MCP servers. Your role is to answer questions using real data — pavement conditions, traffic signs, crash records, 311 complaints, construction activity, street-level imagery, and civic statistics across multiple cities.
 
 For a step-by-step demo walkthrough with expected results, see `FOLLOW-ALONG.md`.
 
@@ -29,6 +29,35 @@ City of Boston's open data portal (data.boston.gov).
 
 **SQL tips:** Resource IDs must be double-quoted in FROM clauses. Column names are case-sensitive — always check `get_schema` first. `EXTRACT()` is blocked; use `left(field, 4)` for year extraction.
 
+### Socrata MCP (`socrata`) — NYC Open Data + Multi-City
+Query any Socrata-powered open data portal. Default domain: `data.cityofnewyork.us` (NYC).
+- **3 tools** — `search` (find datasets by keyword), `fetch` (metadata + sample records), `get_data` (SoQL queries with full filtering)
+- **Setup**: Requires Node.js 18+ (npx runs the server automatically)
+- **Key NYC datasets**: 311 Requests (`erm2-nwe9`), Restaurant Inspections (`43nn-pn8j`), Housing Violations (`wvxf-dwi5`)
+
+**Always start with:** `search` to find datasets, then `get_data` with `SELECT * LIMIT 1` to discover columns before writing real queries.
+
+**SoQL tips (critical):**
+- SoQL is **case-sensitive** — use `upper(column) LIKE '%VALUE%'`, NEVER `ILIKE` for aggregations
+- NYC 311 has ~10k records/day — always add date filters (`WHERE created_date > '2026-01-01'`)
+- Supported domains: `data.cityofnewyork.us` (full), `data.cityofchicago.org` (full), `data.sfgov.org` (limited search), `data.seattle.gov` (full), `data.lacity.org` (query-only, `get_data` only)
+
+See `reference/socrata-datasets.md` for full SoQL patterns and dataset schemas.
+
+### Data Commons MCP (`data-commons`) — Google Statistical Data
+Query the Google Data Commons knowledge graph — Census, UN, WHO, CDC, and more.
+- **2 tools** — `search_indicators` (find statistical variables), `get_observations` (retrieve time-series data)
+- `search_indicators`: takes `query` (string) and `places` (array, e.g. `["New York City, USA"]`)
+- `get_observations`: takes `variable_dcid`, `place_dcid`, `date` (use `"latest"` for most recent)
+
+**Key DCIDs**: NYC (`geoId/3651000`), Boston (`geoId/2507000`), Chicago (`geoId/1714000`), LA (`geoId/0644000`), SF (`geoId/0667000`), Seattle (`geoId/5363000`)
+
+**Common variables**: `Count_Person` (population), `Median_Income_Person`, `Count_HousingUnit`, `UnemploymentRate_Person`, `Count_CriminalActivities_CombinedCrime`
+
+**Workflow**: `search_indicators(query="income", places=["New York City, USA"])` to find variable DCIDs, then `get_observations(variable_dcid="Median_Income_Person", place_dcid="geoId/3651000", date="latest")`.
+
+See `reference/datacommons-reference.md` for full variable list and DCIDs.
+
 ## Key Datasets (Boston Open Data)
 
 | Dataset | Resource ID | Use |
@@ -43,10 +72,23 @@ City of Boston's open data portal (data.boston.gov).
 
 ## Workflow Patterns
 
-### Cross-MCP Analysis
-When the user asks a question that spans both data sources:
-1. Get the relevant data from each MCP independently
-2. Use coordinates (lat/long) as the join key
+### Cross-MCP Analysis Patterns
+
+**Which MCP for what:**
+- Boston-specific (311, permits, crashes) --> `boston` MCP
+- NYC-specific (311, restaurants, housing) --> `socrata` MCP
+- Demographics, population, income for any city --> `data-commons` MCP
+- Street imagery, pavement, signs --> `cyvl` MCP
+
+**Boston vs NYC comparison:** Use `boston` for Boston data + `socrata` for NYC data + `data-commons` for demographics of both cities. Data Commons normalizes stats across cities.
+
+**NYC-only analysis:** `socrata` for operational data (311/restaurants/housing) + `data-commons` for population/income context.
+
+**Coordinate joining:** Boston CKAN returns lat/long as TEXT (must CAST to FLOAT). Socrata returns location objects with embedded coordinates. Always verify coordinate formats before joining.
+
+**General pattern:**
+1. Get relevant data from each MCP independently
+2. Use coordinates (lat/long) or city-level aggregation as the join key
 3. Present findings side by side, then synthesize
 
 ### Spatial Queries (Cyvl)

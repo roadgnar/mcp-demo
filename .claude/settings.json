@@ -4,6 +4,8 @@
     "allow": [
       "mcp__cyvl__*",
       "mcp__boston__*",
+      "mcp__socrata__*",
+      "mcp__data-commons__*",
       "mcp__claude_ai_Cyvl__*",
       "mcp__claude_ai_Boston_CIO_MCP__*",
       "Bash(ls *)",

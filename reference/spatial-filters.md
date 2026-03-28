@@ -92,3 +92,33 @@ Cyvl MCP: list_distresses(radius={lat:42.296, lng:-71.088, meters:300})
 | Roslindale | 42.285 | -71.130 |
 | Charlestown | 42.380 | -71.060 |
 | Fenway/Kenmore | 42.345 | -71.100 |
+
+## NYC Borough Approximate Centers
+
+| Borough | Lat | Lon |
+|---------|-----|-----|
+| Manhattan | 40.7831 | -73.9712 |
+| Brooklyn | 40.6782 | -73.9442 |
+| Queens | 40.7282 | -73.7949 |
+| Bronx | 40.8448 | -73.8648 |
+| Staten Island | 40.5795 | -74.1502 |
+
+## Socrata Spatial Filtering (NYC)
+
+Socrata datasets with a `location` column support `within_circle()`:
+
+```
+WHERE within_circle(location, 40.7831, -73.9712, 500)
+```
+
+Parameters: `within_circle(location_column, latitude, longitude, radius_in_meters)`
+
+Example — 311 complaints within 500m of central Manhattan:
+```
+SELECT complaint_type, COUNT(*) AS cnt
+WHERE within_circle(location, 40.7831, -73.9712, 500)
+  AND created_date >= '2026-01-01T00:00:00'
+GROUP BY complaint_type
+ORDER BY cnt DESC
+LIMIT 10
+```
