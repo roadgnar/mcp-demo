@@ -162,7 +162,7 @@ Main branch users: run `list_projects(has_embeddings=true)` in Cyvl to discover 
 | `.mcp.json` | MCP server connections — auto-loaded |
 | `.claude/settings.json` | Pre-approved tool permissions |
 | `.claude/skills/` | Reusable workflows invoked via `/` commands |
-| `FOLLOW-ALONG.md` | Step-by-step demo walkthrough |
+| `EXAMPLES.md` | Hands-on demo prompts with expected results |
 | `prompts/` | Prompt recipes organized by use case |
 | `reference/` | Tool docs, dataset schemas, spatial filter examples |
 

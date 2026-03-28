@@ -134,8 +134,8 @@ This is infrastructure intelligence: AI vision + open data + demographic context
 
 For walkthroughs with neighborhood-level prompts, specific dataset IDs, and local context:
 
-- **Boston:** `git checkout boston` -- see FOLLOW-ALONG-BOSTON.md
-- **NYC:** `git checkout nyc` -- see FOLLOW-ALONG-NYC.md
+- **Boston:** `git checkout boston` -- see EXAMPLES-BOSTON.md
+- **NYC:** `git checkout nyc` -- see EXAMPLES-NYC.md
 
 ---
 

@@ -1,45 +1,31 @@
-# Cyvl Imagery Coverage Registry
+# Cyvl Imagery Coverage
 
-Current status of street-level AI imagery search across cities.
+## Active Projects
 
-## Coverage Table
+### Boston Metro
 
-| City | Status | Embedded Images | Project ID | Fallback |
-|------|--------|----------------|------------|----------|
-| Boston | Production | 237K+ | `8d8f8cd6-f25a-470c-88fd-6b0e0ad4d1d7` | N/A |
-| NYC | POC Stage 4/8 | 0 (pipeline) | TBD | Socrata 311 (`erm2-nwe9`) |
-| Somerville | POC | 0 | TBD | Boston open data |
-| Atlanta | POC Stage 4/8 | 0 | TBD | Socrata |
-| San Francisco | POC Stage 4/8 | 0 | TBD | Socrata (`data.sfgov.org`) |
-| Miami | POC Stage 4/8 | 0 | TBD | Socrata |
-| Dallas | POC Stage 4/8 | 0 | TBD | Socrata |
-| Indianapolis | POC Stage 4/8 | 0 | TBD | Socrata |
+| Area | Project ID |
+|------|-----------|
+| Boston (full city, 237K+ images) | `8d8f8cd6-f25a-470c-88fd-6b0e0ad4d1d7` |
+| Somerville | `090e18f2-0002-4a70-90b4-8f073d26294d` |
 
-## POC Stages Explained
+### NYC
 
-The pipeline from raw street scans to searchable imagery has 8 stages:
+| Area | Project ID |
+|------|-----------|
+| Jackson Heights, Queens | `1924f65d-01b6-4170-b0b8-ddf6a887b6e5` |
+| Long Island City, Queens | `5be713ea-d739-4ecc-876d-ccadbe57c04b` |
+| Jamaica, Queens | `e57afa42-1052-4313-a26b-8df6e3154a58` |
+| Manhattan Pilot (partial) | `8cb1a9f3-f2ac-4de9-ad00-b8187db3e63f` |
 
-1. Contract signed
-2. Scans collected
-3. Scans uploaded
-4. Images cataloged and descriptions generated
-5. Embeddings computed
-6. Embeddings indexed for search
-7. Quality validation
-8. Production release
+**Note:** Manhattan Pilot has partial coverage. For demos, prefer Jackson Heights, LIC, or Jamaica.
 
-**Stage 4/8** means scans have been discovered, images cataloged, and descriptions are ready, but the images are NOT yet embedded for semantic search. The `/see` skill cannot return photos until stage 6+.
+## Discovery
 
-## How to Check Live Coverage
+Use `list_projects(has_embeddings=true)` to find projects with searchable imagery.
+Use `get_project_overview(project_id)` for coverage area, miles surveyed, and asset counts.
 
-Call `list_projects(has_embeddings=true)` via the Cyvl MCP. Only projects returned by this call support imagery search.
+## City Branches
 
-## Fallback Behavior (used by /see skill)
-
-When a city lacks Cyvl imagery, the skill uses tiered fallbacks:
-
-1. **Socrata 311 data** — many complaint categories include location details and photos (NYC, Chicago, SF, Seattle, LA)
-2. **Boston open data** — for Boston-area cities without their own Cyvl project
-3. **Data Commons** — demographic context only, no imagery
-
-The fallback is always disclosed to the user — never presented as if it were street-level imagery.
+- `boston` branch: Boston metro coverage + Somerville
+- `nyc` branch: Queens + Manhattan Pilot coverage
