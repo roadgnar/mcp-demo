@@ -1,25 +1,55 @@
-# NYC Infrastructure Intelligence -- Hands-On Demo
+# NYC Examples
 
-**Use AI to see, explore, and analyze civic infrastructure data across Queens and NYC.**
+**Explore Queens neighborhoods and NYC civic data with AI.**
 
-> Copy-paste the prompts below into Claude and see the results live. Each part builds on the last, but you can jump to any section.
+Complete [SETUP.md](SETUP.md) first for API keys and prerequisites. Then run through these examples to verify everything works.
 
 ---
 
-## Setup
+## Before You Start
 
-**Desktop:** Open Claude Desktop, start a Cowork session scoped to the `mcp-demo` repo.
+### NYC Cyvl Projects
 
-**Terminal:**
+| Area | Project ID | Notes |
+|------|-----------|-------|
+| Jackson Heights, Queens | `1924f65d-01b6-4170-b0b8-ddf6a887b6e5` | Primary demo area |
+| Long Island City, Queens | `5be713ea-d739-4ecc-876d-ccadbe57c04b` | Primary demo area |
+| Jamaica, Queens | `e57afa42-1052-4313-a26b-8df6e3154a58` | Primary demo area |
+| Manhattan Pilot | `8cb1a9f3-f2ac-4de9-ad00-b8187db3e63f` | Partial coverage — bonus only |
 
+**For demos, use the Queens projects.** Manhattan Pilot has gaps.
+
+### NYC Open Data (Socrata)
+
+| Dataset | ID |
+|---------|----|
+| 311 Service Requests | `erm2-nwe9` |
+| Restaurant Inspections | `43nn-pn8j` |
+| Housing Violations | `wvxf-dwi5` |
+
+Data Commons NYC DCID: `geoId/3651000`
+
+### Open the Project
+
+**Claude Desktop (Cowork):**
+1. Open Claude Desktop
+2. Click the **Cowork** tab (bottom-left)
+3. Click **"Select folder"** and choose the **`mcp-demo`** folder
+4. Verify you're **scoped to the mcp-demo repo** — you should see `CLAUDE.md` in the session
+5. Open the **MCP connectors** panel (plug icon) and connect **Cyvl** via OAuth
+
+**Claude Code:**
 ```bash
 cd mcp-demo
 claude
+/mcp   # Connect Cyvl via OAuth
 ```
 
-The **Socrata** and **Data Commons** MCP servers connect automatically. The **Cyvl** MCP requires a one-time OAuth login -- run `/mcp` and connect Cyvl.
+### Recommended: Run Through These Examples
 
-For full setup instructions, see [SETUP-NYC.md](SETUP-NYC.md).
+The examples below verify each MCP connection and show what's possible. If any example fails, check [Troubleshooting](#troubleshooting) at the bottom.
+
+*NYC School of Data note: These projects were surveyed in collaboration with nycsod. This branch was prepared for the NYC School of Data unconference (BetaNYC, March 2026).*
 
 ---
 
@@ -169,3 +199,14 @@ This is infrastructure intelligence for Queens: AI vision + NYC open data + demo
 | SoQL patterns | See `reference/nyc-datasets.md` |
 | Spatial filters | See `reference/nyc-spatial.md` |
 | All prompts | See `prompts/nyc-open-data.md` |
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Cyvl returns no results for Queens | Verify project access with `list_projects(has_embeddings=true)` — you should see all 4 NYC projects |
+| Socrata returns wrong borough | Add `WHERE upper(borough) = 'QUEENS'` to SoQL queries |
+| Manhattan Pilot returns sparse data | Expected — partial coverage. Switch to Jackson Heights, LIC, or Jamaica |
+| 311 queries timeout | Add date filters: `WHERE created_date > '2026-01-01'` (10k records/day) |
+| Restaurant grades all NULL | Filter with `WHERE grade IS NOT NULL` — many records are pending inspection |
+| SoQL case errors | SoQL is case-sensitive — use `upper(column) LIKE '%VALUE%'`, not ILIKE |
