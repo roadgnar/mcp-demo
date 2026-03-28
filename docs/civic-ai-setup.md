@@ -289,8 +289,8 @@ SELECT * WHERE within_circle(location, 42.36, -71.06, 500)
 
 | Tool | Purpose |
 |------|---------|
-| `search_entities` | Find geographic entities (cities, states, countries) |
-| `get_statistics` | Retrieve statistical data for entities and variables |
+| `search_indicators` | Find statistical variables for a place (takes `query` + `places` array) |
+| `get_observations` | Retrieve time-series data (takes `variable_dcid` + `place_dcid` + `date`) |
 
 ### Key DCIDs (Data Commons IDs)
 
