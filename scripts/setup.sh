@@ -3,8 +3,23 @@
 # Setup script for civic-ai-tools
 # This script prepares your environment for using MCP servers with Cursor IDE or Claude Code CLI
 #
+# Usage:
+#   ./scripts/setup.sh                                          # interactive
+#   ./scripts/setup.sh --socrata-token TOKEN --dc-api-key KEY   # non-interactive (e.g. from Claude Code)
+#
 
 set -e
+
+# Parse command-line arguments
+ARG_SOCRATA_TOKEN=""
+ARG_DC_KEY=""
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --socrata-token) ARG_SOCRATA_TOKEN="$2"; shift 2 ;;
+        --dc-api-key)    ARG_DC_KEY="$2"; shift 2 ;;
+        *) shift ;;
+    esac
+done
 
 # Colors for output
 RED='\033[0;31m'
@@ -181,61 +196,77 @@ if [ -f "$PROJECT_DIR/.env" ]; then
     DC_KEY="${DC_API_KEY:-}"
 fi
 
-# If keys are missing, prompt the user interactively
+# Apply any keys passed via command-line flags
+[ -n "$ARG_SOCRATA_TOKEN" ] && SOCRATA_TOKEN="$ARG_SOCRATA_TOKEN"
+[ -n "$ARG_DC_KEY" ] && DC_KEY="$ARG_DC_KEY"
+
+# If keys are missing, either prompt interactively or report what's needed
 if [ -z "$SOCRATA_TOKEN" ] || [ -z "$DC_KEY" ]; then
-    echo ""
-    echo -e "${YELLOW}────────────────────────────────────────────────────────────────${NC}"
-    echo -e "${YELLOW}  API keys not found!${NC}"
-    echo -e "${YELLOW}────────────────────────────────────────────────────────────────${NC}"
-    echo ""
-    echo "  The MCP servers work best with API keys (they increase rate limits)."
-    echo "  Both keys are free to obtain. You can skip for now and add them later."
-    echo ""
-    echo "  You can paste your keys below, or if you prefer, edit .env directly:"
-    echo "    cp .env.example .env   # (if .env doesn't exist yet)"
-    echo "    nano .env              # (or open in any text editor)"
-    echo ""
 
-    if [ -z "$SOCRATA_TOKEN" ]; then
-        echo -e "${BLUE}  NYC Open Data (Socrata) App Token${NC}"
-        echo "    1. Go to: https://data.cityofnewyork.us/profile/edit/developer_settings"
-        echo "    2. Create a free account (or sign in)"
-        echo "    3. Click 'Create New App Token'"
+    if [ -t 0 ]; then
+        # ── Interactive terminal: prompt the user directly ──
         echo ""
-        read -rsp "  Paste your Socrata App Token (or press Enter to skip): " SOCRATA_TOKEN
-        echo ""  # newline after silent read
-    fi
-
-    if [ -z "$DC_KEY" ]; then
-        echo -e "${BLUE}  Google Data Commons API Key${NC}"
-        echo "    1. Go to: https://apikeys.datacommons.org/"
-        echo "    2. Sign in with your Google account"
-        echo "    3. Copy the API key provided"
+        echo -e "${YELLOW}────────────────────────────────────────────────────────────────${NC}"
+        echo -e "${YELLOW}  API keys not found!${NC}"
+        echo -e "${YELLOW}────────────────────────────────────────────────────────────────${NC}"
         echo ""
-        read -rsp "  Paste your Data Commons API Key (or press Enter to skip): " DC_KEY
-        echo ""  # newline after silent read
-    fi
+        echo "  The MCP servers work best with API keys (they increase rate limits)."
+        echo "  Both keys are free to obtain. You can skip for now and add them later."
+        echo ""
+        echo "  You can paste your keys below, or if you prefer, edit .env directly:"
+        echo "    cp .env.example .env   # (if .env doesn't exist yet)"
+        echo "    nano .env              # (or open in any text editor)"
+        echo ""
 
-    # Save keys to .env so they persist for future runs
-    if [ -n "$SOCRATA_TOKEN" ] || [ -n "$DC_KEY" ]; then
-        if [ ! -f "$PROJECT_DIR/.env" ]; then
-            cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
+        if [ -z "$SOCRATA_TOKEN" ]; then
+            echo -e "${BLUE}  NYC Open Data (Socrata) App Token${NC}"
+            echo "    1. Go to: https://data.cityofnewyork.us/profile/edit/developer_settings"
+            echo "    2. Create a free account (or sign in)"
+            echo "    3. Click 'Create New App Token'"
+            echo ""
+            read -rsp "  Paste your Socrata App Token (or press Enter to skip): " SOCRATA_TOKEN
+            echo ""  # newline after silent read
         fi
-        # Write values into .env (preserve the file structure)
-        if [ -n "$SOCRATA_TOKEN" ]; then
-            sed -i.bak "s|^SOCRATA_APP_TOKEN=.*|SOCRATA_APP_TOKEN=$SOCRATA_TOKEN|" "$PROJECT_DIR/.env"
+
+        if [ -z "$DC_KEY" ]; then
+            echo -e "${BLUE}  Google Data Commons API Key${NC}"
+            echo "    1. Go to: https://apikeys.datacommons.org/"
+            echo "    2. Sign in with your Google account"
+            echo "    3. Copy the API key provided"
+            echo ""
+            read -rsp "  Paste your Data Commons API Key (or press Enter to skip): " DC_KEY
+            echo ""  # newline after silent read
         fi
-        if [ -n "$DC_KEY" ]; then
-            sed -i.bak "s|^DC_API_KEY=.*|DC_API_KEY=$DC_KEY|" "$PROJECT_DIR/.env"
-        fi
-        rm -f "$PROJECT_DIR/.env.bak"
-        print_success "API keys saved to .env"
     else
-        echo -e "  ${YELLOW}Skipped.${NC} To add keys later, copy the example and fill it in:"
-        echo "    cp .env.example .env"
+        # ── Non-interactive (e.g. Claude Code, CI): report what's missing ──
+        echo ""
+        echo "MISSING_API_KEYS:"
+        [ -z "$SOCRATA_TOKEN" ] && echo "  - SOCRATA_APP_TOKEN (get one at https://data.cityofnewyork.us/profile/edit/developer_settings)"
+        [ -z "$DC_KEY" ]        && echo "  - DC_API_KEY (get one at https://apikeys.datacommons.org/)"
+        echo ""
+        echo "To provide keys, re-run with flags:"
+        echo "  ./scripts/setup.sh --socrata-token YOUR_TOKEN --dc-api-key YOUR_KEY"
+        echo ""
     fi
+fi
 
-    echo ""
+# Save keys to .env if we have any
+if [ -n "$SOCRATA_TOKEN" ] || [ -n "$DC_KEY" ]; then
+    if [ ! -f "$PROJECT_DIR/.env" ]; then
+        cp "$PROJECT_DIR/.env.example" "$PROJECT_DIR/.env"
+    fi
+    if [ -n "$SOCRATA_TOKEN" ]; then
+        sed -i.bak "s|^SOCRATA_APP_TOKEN=.*|SOCRATA_APP_TOKEN=$SOCRATA_TOKEN|" "$PROJECT_DIR/.env"
+    fi
+    if [ -n "$DC_KEY" ]; then
+        sed -i.bak "s|^DC_API_KEY=.*|DC_API_KEY=$DC_KEY|" "$PROJECT_DIR/.env"
+    fi
+    rm -f "$PROJECT_DIR/.env.bak"
+    print_success "API keys saved to .env"
+fi
+
+# Show .env help and privacy note (both modes)
+if [ -z "$SOCRATA_TOKEN" ] || [ -z "$DC_KEY" ]; then
     echo -e "  ${YELLOW}About .env (hidden file):${NC}"
     echo "    Mac/Linux:  open in any text editor, or run: nano .env"
     echo "                To see hidden files in Finder, press Cmd+Shift+."

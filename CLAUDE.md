@@ -12,6 +12,11 @@ A standalone example for querying civic data using MCP servers:
 
 Run `./scripts/setup.sh` to install dependencies and verify configuration.
 
+If the setup script reports missing API keys, ask the user for them and re-run with flags:
+```bash
+./scripts/setup.sh --socrata-token TOKEN --dc-api-key KEY
+```
+
 See [docs/setup.md](docs/setup.md) for detailed instructions.
 
 ## MCP Configuration
