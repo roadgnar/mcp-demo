@@ -300,13 +300,42 @@ mcp-demo/
 ├── prompts/                           # Prompt recipe collections
 │   ├── imagery-search.md
 │   ├── cross-mcp-analysis.md
+│   ├── nyc-open-data.md               # NYC 311, restaurants, housing, demographics
 │   ├── sidewalk-curb.md
 │   ├── construction.md
 │   └── deliverables.md
-└── reference/                         # Quick-reference docs
-    ├── cyvl-mcp-tools.md
-    ├── boston-datasets.md
-    └── spatial-filters.md
+├── reference/                         # Quick-reference docs
+│   ├── cyvl-mcp-tools.md
+│   ├── boston-datasets.md
+│   ├── socrata-datasets.md            # NYC Open Data + multi-city SoQL patterns
+│   ├── datacommons-reference.md       # Data Commons tools, DCIDs, variables
+│   └── spatial-filters.md
+├── civic-ai-tools/                    # Upstream framework (git subtree)
+│   ├── docs/datasets.md              # 5-city dataset directory (30-40 datasets each)
+│   ├── docs/skills/base.md           # Anti-hallucination + SoQL guidance
+│   ├── docs/mcp-servers.md           # 50+ civic MCP server registry
+│   └── ...                           # Full civic-ai-tools repo
+├── docs/
+│   └── civic-ai-setup.md             # Setup guide for Socrata + Data Commons
+└── scripts/
+    └── setup-civic.sh                # Generate .mcp.json configs
+```
+
+## Civic AI Tools
+
+This repo includes [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) by **Nick Storey ([@npstorey](https://github.com/npstorey))** as a git subtree in `civic-ai-tools/`. It provides:
+
+- Anti-hallucination skill guidance for Socrata MCP queries
+- Curated dataset directories for NYC, Chicago, SF, Seattle, and LA
+- 50+ civic MCP server registry
+- SoQL query patterns and domain-specific workarounds
+- Setup automation for multiple AI coding tools
+
+The Socrata MCP server (by **Scott Robbin**) is used via `npx socrata-mcp-server --stdio` and automatically delivers the skill guidance via its MCP `prompts/get` endpoint.
+
+To update to the latest civic-ai-tools:
+```bash
+git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-tools.git main --squash
 ```
 
 ## Resources
@@ -316,4 +345,8 @@ mcp-demo/
 - [Claude Code MCP Docs](https://code.claude.com/docs/en/mcp)
 - [Cyvl MCP Documentation](https://i3.cyvl.dev/docs)
 - [Boston Open Data Portal](https://data.boston.gov)
+- [NYC Open Data Portal](https://data.cityofnewyork.us)
+- [Google Data Commons](https://datacommons.org)
+- [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) — Upstream framework by @npstorey
+- [socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server) — Socrata MCP by Scott Robbin
 - [MCP Best Practices (Anthropic)](https://www.anthropic.com/engineering/writing-tools-for-agents)

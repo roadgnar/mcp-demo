@@ -42,7 +42,7 @@ Query any Socrata-powered open data portal. Default domain: `data.cityofnewyork.
 - NYC 311 has ~10k records/day — always add date filters (`WHERE created_date > '2026-01-01'`)
 - Supported domains: `data.cityofnewyork.us` (full), `data.cityofchicago.org` (full), `data.sfgov.org` (limited search), `data.seattle.gov` (full), `data.lacity.org` (query-only, `get_data` only)
 
-See `reference/socrata-datasets.md` for full SoQL patterns and dataset schemas.
+See `reference/socrata-datasets.md` for SoQL patterns and `civic-ai-tools/docs/datasets.md` for the full 5-city dataset directory (NYC, Chicago, SF, Seattle, LA — 30-40 verified datasets per city).
 
 ### Data Commons MCP (`data-commons`) — Google Statistical Data
 Query the Google Data Commons knowledge graph — Census, UN, WHO, CDC, and more.
@@ -199,3 +199,14 @@ ORDER BY cnt DESC
 - When showing images, show exactly the number requested (usually 3)
 - Always state which MCP server each data point came from
 - For cross-MCP analysis: present data from each source, then synthesize the connection
+
+## Civic AI Tools Framework
+
+This repo includes [civic-ai-tools](https://github.com/npstorey/civic-ai-tools) by @npstorey as a subtree in `civic-ai-tools/`. Key resources:
+
+- `civic-ai-tools/docs/datasets.md` — Curated 5-city dataset directory with verified IDs (NYC, Chicago, SF, Seattle, LA)
+- `civic-ai-tools/docs/skills/base.md` — Anti-hallucination framework, query complexity assessment, SoQL patterns (also delivered automatically by the Socrata MCP server via `prompts/get`)
+- `civic-ai-tools/docs/mcp-servers.md` — Directory of 50+ civic MCP servers worldwide
+- `civic-ai-tools/CONTRIBUTING.md` — How to contribute back to the upstream project
+
+To update to latest: `git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-tools.git main --squash`
