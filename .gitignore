@@ -44,5 +44,8 @@ venv/
 # Temp files
 temp/
 
+# Analysis outputs
+analysis/
+
 # Logs
 *.log
