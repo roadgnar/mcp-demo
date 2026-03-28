@@ -1,0 +1,66 @@
+name: Suggest a Server
+description: Suggest an MCP server to add to the civic data directory
+title: "[Directory] "
+labels: ["directory-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an MCP server! This helps us grow the civic data directory.
+
+  - type: input
+    id: server-name
+    attributes:
+      label: Server name
+      description: The display name of the MCP server
+      placeholder: e.g., census-mcp
+    validations:
+      required: true
+
+  - type: input
+    id: repo-url
+    attributes:
+      label: Repository URL
+      description: GitHub repository or project homepage
+      placeholder: e.g., https://github.com/org/repo
+    validations:
+      required: true
+
+  - type: input
+    id: data-sources
+    attributes:
+      label: Data source(s)
+      description: What data does this server provide access to?
+      placeholder: e.g., U.S. Census Bureau ACS data
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: transport
+    attributes:
+      label: Transport
+      description: How does the server communicate?
+      options:
+        - label: stdio (local subprocess)
+        - label: HTTP (web service)
+        - label: SSE (Server-Sent Events)
+
+  - type: checkboxes
+    id: government-level
+    attributes:
+      label: Government level
+      description: What level(s) of government data does it cover?
+      options:
+        - label: Local
+        - label: State
+        - label: Federal
+        - label: International
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Anything else we should know — tool count, API key requirements, special features, etc.
+      placeholder: Optional
+    validations:
+      required: false
