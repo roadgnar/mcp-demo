@@ -62,6 +62,8 @@ graph TD
 
 ## Prerequisites
 
+For complete setup instructions including API key registration, Windows PowerShell setup, and troubleshooting, see **[SETUP.md](SETUP.md)**.
+
 **Required:**
 - **Claude account**: Pro, Max, Teams, or Enterprise
 - **Cyvl account**: Required for infrastructure data and imagery (ask your team for access)
