@@ -1,25 +1,41 @@
-# Boston Infrastructure Intelligence -- Hands-On Demo
+# Boston Examples
 
 **Explore Boston's streets, data, and infrastructure with AI.**
 
-> Copy-paste the prompts below into Claude and see the results live. Each part builds on the last, but you can jump to any section.
+Complete [SETUP.md](SETUP.md) first for API keys and prerequisites. Then run through these examples to verify everything works.
 
 ---
 
-## Setup
+## Before You Start
 
-**Desktop:** Open Claude Desktop, start a Cowork session scoped to the `mcp-demo` repo.
+### Boston Cyvl Projects
 
-**Terminal:**
+| Area | Project ID | Coverage |
+|------|-----------|----------|
+| Boston (full city) | `8d8f8cd6-f25a-470c-88fd-6b0e0ad4d1d7` | 237K+ street-level images |
+| Somerville | `090e18f2-0002-4a70-90b4-8f073d26294d` | Adjacent city |
 
+Boston CKAN auto-connects (no key needed). Data Commons DCID: `geoId/2507000`.
+
+### Open the Project
+
+**Claude Desktop (Cowork):**
+1. Open Claude Desktop
+2. Click the **Cowork** tab (bottom-left)
+3. Click **"Select folder"** and choose the **`mcp-demo`** folder
+4. Verify you're **scoped to the mcp-demo repo** — you should see `CLAUDE.md` in the session
+5. Open the **MCP connectors** panel (plug icon) and connect **Cyvl** via OAuth
+
+**Claude Code:**
 ```bash
 cd mcp-demo
 claude
+/mcp   # Connect Cyvl via OAuth
 ```
 
-All four MCPs (Cyvl, Boston CKAN, Socrata, Data Commons) connect automatically. Run `/mcp` to verify. Cyvl requires a one-time OAuth login.
+### Recommended: Run Through These Examples
 
-For base setup instructions, see [SETUP.md](SETUP.md). For Boston-specific setup details, see [SETUP-BOSTON.md](SETUP-BOSTON.md).
+The examples below verify each MCP connection and show what's possible. If any example fails, check [Troubleshooting](#troubleshooting) at the bottom.
 
 ---
 
@@ -163,3 +179,13 @@ This is infrastructure intelligence: AI vision + open data + demographic context
 | Neighborhood coordinates | See `reference/boston-spatial.md` |
 | Dataset schemas | See `reference/boston-datasets.md` |
 | Coverage summary | See `reference/boston-coverage.md` |
+
+## Troubleshooting
+
+| Problem | Fix |
+|---------|-----|
+| Cyvl returns no Boston results | Verify project access with `list_projects` — you need `8d8f8cd6` in the list |
+| Boston CKAN SQL errors | Always call `get_schema` before querying — column names are case-sensitive |
+| Crash queries return empty | Street names are UPPERCASE (`'BLUE HILL AVE'`), lat/long are TEXT (must CAST) |
+| 311 pothole data missing | Only in legacy dataset (`1a0b420d`), not the new system (`254adca6`) |
+| Work zones query fails | Columns are PascalCase — use `"Neighborhood"` not `neighborhood` |

@@ -156,21 +156,21 @@ Search for "fire hydrants" and show me 3 images
 
 ## City Branches
 
-The **main** branch is the city-agnostic framework — it works for any city with Cyvl coverage and open data.
+You are on the **boston** branch. This adds Boston-specific demos, datasets, and prompts on top of the base framework.
 
-City-specific branches add curated demos, dataset IDs, and neighborhood-level prompts:
+**Recommended: Run through [EXAMPLES-BOSTON.md](EXAMPLES-BOSTON.md) to verify your setup and see what's possible.** The examples test each MCP connection and demonstrate the full workflow — from street-level imagery to stakeholder reports.
 
 | Branch | What It Adds |
 |--------|-------------|
-| `boston` | Boston neighborhoods, Vision Zero walkthrough, 311 pothole demos |
-| `nyc` | NYC 311, restaurant inspections, housing violations demos |
+| **`boston` (you are here)** | Boston neighborhoods, Vision Zero, 311 potholes, Somerville |
+| `nyc` | NYC 311, restaurant inspections, housing violations, Queens Cyvl |
+| `main` | City-agnostic framework — works for any city |
 
-To switch to a city branch:
+To switch branches:
 ```bash
-git checkout boston   # or: git checkout nyc
+git checkout nyc     # NYC demos
+git checkout main    # City-agnostic base
 ```
-
-Main branch users: run `list_projects(has_embeddings=true)` in Cyvl to discover which cities have imagery coverage.
 
 ## What's In This Repo
 
