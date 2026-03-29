@@ -13,7 +13,7 @@
 #   1. Checks prerequisites (Node.js 18+, Python 3+, npx, uvx)
 #   2. Reads API keys from .env.local
 #   3. Generates .mcp.json and .cursor/mcp.json with cmd /c wrappers for npx
-#   4. Prints Claude Desktop config snippet for manual addition
+#   4. Prints summary
 #
 # No git clone, no npm install, no npm build — npx and uvx handle everything.
 # Idempotent: safe to run multiple times.
@@ -244,50 +244,6 @@ if (-not $SocrataToken -or -not $DcKey) {
     Write-Host "  2. Re-run: powershell -ExecutionPolicy Bypass -File .\scripts\setup-civic.ps1"
     Write-Host ""
 }
-
-# --- Claude Desktop ---
-Write-Host "For Claude Desktop:" -ForegroundColor White
-Write-Host "  Add to %APPDATA%\Claude\claude_desktop_config.json:"
-Write-Host ""
-Write-Host "  Merge these servers into your existing mcpServers object:" -ForegroundColor DarkGray
-Write-Host ""
-
-$DesktopSnippet = @"
-    "boston": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "mcp-remote", "https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp"]
-    },
-    "socrata": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "socrata-mcp-server", "--stdio"],
-      "env": {
-        "DEFAULT_DOMAIN": "data.cityofnewyork.us",
-        "SOCRATA_APP_TOKEN": "$SocrataToken",
-        "CACHE_ENABLED": "true",
-        "LOG_LEVEL": "info"
-      }
-    },
-    "data-commons": {
-      "command": "uvx",
-      "args": ["datacommons-mcp", "serve", "stdio"],
-      "env": {
-        "DC_API_KEY": "$DcKey"
-      }
-    }
-"@
-
-Write-Host $DesktopSnippet
-Write-Host ""
-Write-Host "  Then restart Claude Desktop (full quit + reopen)." -ForegroundColor DarkGray
-Write-Host ""
-
-# --- MSIX Warning ---
-Write-Host "Windows Notes:" -ForegroundColor White
-Write-Host "  - npx requires cmd /c wrapper in MCP configs — this script handles it"
-Write-Host "  - MSIX (Microsoft Store) Claude Desktop may use a different config path:"
-Write-Host "    %LOCALAPPDATA%\Packages\...\LocalCache\Roaming\Claude\"
-Write-Host "  - If MCP servers fail to connect, verify Node.js is in your system PATH"
-Write-Host ""
 
 # --- Quick start ---
 $FolderName = Split-Path $ProjectDir -Leaf

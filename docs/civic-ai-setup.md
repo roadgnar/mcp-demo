@@ -4,7 +4,7 @@ Add NYC Open Data (Socrata) and Google Data Commons MCP servers to this workspac
 
 ## What You Get
 
-After setup, you have **three MCP servers** available in Claude Code, Cursor, and Claude Desktop:
+After setup, you have **three MCP servers** available in Claude Code and Cursor:
 
 | Server | Data Source | Transport | Auth |
 |--------|------------|-----------|------|
@@ -91,7 +91,7 @@ Both files are **gitignored** because they contain API keys.
 
 ### Step 6: Print Summary
 
-Shows status of all three servers, lists generated files, and prints the Claude Desktop config snippet for manual addition.
+Shows status of all three servers and lists generated files.
 
 ## Platform-Specific Setup
 
@@ -115,62 +115,6 @@ Automatic. After running `setup-civic.sh`:
 3. Use Composer or Chat to query data
 
 **Important**: Cursor requires **absolute paths**. The setup script handles this — don't edit `.cursor/mcp.json` paths manually.
-
-### Claude Desktop
-
-Manual. Claude Desktop uses a single global config file, not per-project configs.
-
-**Config file location:**
-
-| OS | Path |
-|----|------|
-| Linux | `~/.config/Claude/claude_desktop_config.json` |
-| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
-
-**Steps:**
-
-1. Run `./scripts/setup-civic.sh` — the script prints the exact JSON to add
-2. Open the config file
-3. Merge the `socrata` and `data-commons` entries into your existing `mcpServers` object
-4. **Fully quit Claude Desktop** (not just close the window)
-5. Reopen Claude Desktop
-
-**Example merged config (Linux):**
-
-```json
-{
-  "mcpServers": {
-    "boston": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp"]
-    },
-    "socrata": {
-      "command": "node",
-      "args": ["/home/phi/Documents/GitHub/mcp-demo/.mcp-servers/socrata-mcp-server/dist/index.js", "--stdio"],
-      "env": {
-        "DEFAULT_DOMAIN": "data.cityofnewyork.us",
-        "SOCRATA_APP_TOKEN": "your-token-here",
-        "CACHE_ENABLED": "true",
-        "LOG_LEVEL": "info"
-      }
-    },
-    "data-commons": {
-      "command": "/home/phi/.local/bin/datacommons-mcp",
-      "args": ["serve", "--skip-api-key-validation", "stdio"],
-      "env": {
-        "DC_API_KEY": "your-key-here"
-      }
-    }
-  }
-}
-```
-
-**Notes:**
-- All paths must be **absolute** (no `./`, no `${workspaceFolder}`)
-- API keys are literal values — Claude Desktop has no env var interpolation
-- The `boston` server uses `mcp-remote` (HTTP); `socrata` and `data-commons` are local processes (stdio)
-- Remote MCP servers added via Settings > Integrations are separate from this config
 
 ## API Keys
 
@@ -233,7 +177,6 @@ mcp-demo/
 | `npm run build` fails | Check Node.js version (`node -v`). Need 18+. |
 | Socrata queries return 429 | Add `SOCRATA_APP_TOKEN` to `.env.local` and re-run setup |
 | Data Commons returns auth error | Check `DC_API_KEY` is set in `.env.local`. Re-run setup. |
-| Claude Desktop MCP not showing | Full quit + reopen (not just close window). Check JSON syntax (no trailing commas). |
 | `git clone` fails (firewall) | Download socrata-mcp-server ZIP manually into `.mcp-servers/` |
 
 ## Socrata MCP — Tool Reference
@@ -315,7 +258,7 @@ SELECT * WHERE within_circle(location, 42.36, -71.06, 500)
 
 ## Example Queries (After Setup)
 
-Try these in Claude Code, Cursor, or Claude Desktop:
+Try these in Claude Code or Cursor:
 
 **NYC Open Data (Socrata):**
 > "What are the top 10 complaint types in NYC 311 this month?"

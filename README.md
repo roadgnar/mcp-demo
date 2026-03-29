@@ -33,7 +33,7 @@ See your city's infrastructure through AI. Cyvl searches 237K+ street-level imag
 
 ```mermaid
 graph TD
-    User[You / Claude Desktop or Code]
+    User[You / Claude Code or Cursor]
 
     User -->|MCP| Cyvl["Cyvl MCP\n(AI Infrastructure Intelligence)"]
     User -->|MCP| Socrata["Socrata MCP\n(via civic-ai-tools)"]
@@ -46,8 +46,7 @@ graph TD
     end
 
     subgraph "civic-ai-tools Framework"
-        Socrata --> NYC["NYC Open Data\n311 / Restaurants / Housing"]
-        Socrata --> Multi["Chicago / SF / Seattle / LA"]
+        Socrata --> Multi["Chicago / SF / Seattle / LA\n311 / Restaurants / Housing"]
         Socrata -.->|"skill guidance\nanti-hallucination"| Skills["docs/skills/base.md\n(query patterns + safety)"]
     end
 
@@ -75,47 +74,9 @@ For complete setup instructions including API key registration, Windows PowerShe
 
 Without Chrome, the `/generate-report` skill generates HTML that you can open in any browser and print to PDF manually.
 
-## Quick Start — Claude Desktop (Cowork)
+## Quick Start — Claude Code
 
-### 1. Install Claude Desktop
-
-Download from [claude.ai/download](https://claude.ai/download) for macOS or Windows and sign in.
-
-### 2. Clone this repo
-
-```bash
-git clone https://github.com/roadgnar/mcp-demo.git
-```
-
-### 3. Open the repo in Cowork
-
-1. Open Claude Desktop
-2. Click the **Cowork** tab (bottom-left)
-3. Click **"Select folder"** and choose the `mcp-demo` folder
-4. Cowork opens a session — `CLAUDE.md` and `.mcp.json` are picked up automatically
-
-### 4. Connect the Cyvl MCP
-
-Open data MCPs auto-connect via `.mcp.json` — no action needed.
-
-For Cyvl:
-1. In Cowork, open the **MCP connectors** panel (plug icon)
-2. Search for **"Cyvl"** and click **Connect**
-3. Log in with your Cyvl account and authorize access
-
-### 5. Start exploring
-
-```
-Search for "fire hydrants" and show me 3 images
-```
-
-Type `/` to see all available skills.
-
----
-
-## Alternate Setup — Claude Code (Terminal)
-
-### Install Claude Code
+### 1. Install Claude Code
 
 **macOS (13.0+):**
 ```bash
@@ -134,17 +95,21 @@ irm https://claude.ai/install.ps1 | iex
 
 **Verify:** `claude --version`
 
-### Quick Start (Claude Code)
+### 2. Clone and set up
 
 ```bash
 git clone https://github.com/roadgnar/mcp-demo.git
 cd mcp-demo
+git checkout boston
+./scripts/setup-civic.sh   # macOS/Linux — generates .mcp.json
 claude
 
 # Connect Cyvl (one-time):
 /mcp
 # Click "Cyvl" -> log in -> authenticate
 ```
+
+### 3. Start exploring
 
 Open data MCPs auto-connect via `.mcp.json`. Once all servers show connected:
 
@@ -163,12 +128,10 @@ You are on the **boston** branch. This adds Boston-specific demos, datasets, and
 | Branch | What It Adds |
 |--------|-------------|
 | **`boston` (you are here)** | Boston neighborhoods, Vision Zero, 311 potholes, Somerville |
-| `nyc` | NYC 311, restaurant inspections, housing violations, Queens Cyvl |
 | `main` | City-agnostic framework — works for any city |
 
 To switch branches:
 ```bash
-git checkout nyc     # NYC demos
 git checkout main    # City-agnostic base
 ```
 
@@ -204,7 +167,7 @@ Edit `.mcp.json`:
 
 1. Create a folder in `.claude/skills/` (e.g., `.claude/skills/my-skill/`)
 2. Add a `SKILL.md` describing the workflow
-3. Invoke with `/my-skill` in Claude Desktop or Claude Code
+3. Invoke with `/my-skill` in Claude Code
 
 ## Example Prompts
 
@@ -230,8 +193,7 @@ See `prompts/` for more organized by use case.
 
 | Problem | Fix |
 |---------|-----|
-| Cyvl MCP not connected (Cowork) | Open MCP connectors panel, search for Cyvl, complete OAuth |
-| Cyvl MCP not connected (Claude Code) | Run `/mcp`, click Cyvl, complete OAuth |
+| Cyvl MCP not connected | Run `/mcp`, click Cyvl, complete OAuth |
 | Open data MCP not connected | Check `.mcp.json` is present. Install Node.js 18+ from [nodejs.org](https://nodejs.org/). |
 | 502 Bad Gateway on Cyvl | Retry once — transient proxy errors resolve immediately |
 | `list_distresses` times out | Reduce radius to 100m, or use `search_imagery` instead |
@@ -263,9 +225,8 @@ git subtree pull --prefix=civic-ai-tools https://github.com/npstorey/civic-ai-to
 - [Data Commons](https://datacommons.org) — Google's unified statistical knowledge graph
 
 **Data Portals:**
-- [NYC Open Data](https://data.cityofnewyork.us) — Socrata-powered, 2,000+ datasets
 - [Boston Open Data](https://data.boston.gov) — CKAN-powered, Analyze Boston
 - [Chicago Open Data](https://data.cityofchicago.org) | [SF Open Data](https://data.sfgov.org) | [Seattle Open Data](https://data.seattle.gov)
 
 **Claude:**
-- [Claude Desktop](https://claude.ai/download) | [Claude Code](https://code.claude.com/docs/en/setup) | [MCP Best Practices](https://www.anthropic.com/engineering/writing-tools-for-agents)
+- [Claude Code](https://code.claude.com/docs/en/setup) | [MCP Best Practices](https://www.anthropic.com/engineering/writing-tools-for-agents)
