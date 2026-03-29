@@ -41,5 +41,5 @@ Find and display real photos of infrastructure, conditions, or objects in cities
 
 - Never hide the fallback — if imagery isn't available, say so clearly
 - Keep `page_size` to 3-5 with `image_content` to manage response size
-- Use `search_id` from metadata call to paginate without re-running the search
+- Use `search_id` from metadata call to paginate — **`query` is always required**, even with `search_id`
 - Always state which data source the results came from

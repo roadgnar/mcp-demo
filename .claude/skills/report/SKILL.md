@@ -167,7 +167,13 @@ tr:nth-child(even) { background: #f9fafb; }
 
 ## Image URL Workflow
 
-Cyvl imagery URLs come from `search_imagery(output="urls")`. Each result has an `image_url` field.
+Cyvl imagery URLs come from `search_imagery(query="...", output="urls")`. Each result has an `image_url` field.
+
+**Important:** `query` is always required, even when paginating with `search_id`. Example:
+```
+search_imagery(query="potholes", project_id="...", output="urls", page_size=5)
+search_imagery(query="potholes", search_id="abc123", output="urls", page=2)  # query still required
+```
 
 Example response:
 ```json

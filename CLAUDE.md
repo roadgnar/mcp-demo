@@ -17,8 +17,8 @@ Use `list_projects(has_embeddings=true)` to discover available cities. See `refe
 
 **Imagery search workflow:**
 1. `search_imagery(query="...", project_id="...", output="metadata")` — fast count + metadata
-2. Re-call with `output="image_content"`, `page_size=3`, `max_width=400` — see actual photos
-3. Use `search_id` from step 1 to paginate without re-running the search
+2. Re-call with `query="..."` (same query), `search_id` from step 1, `output="image_content"`, `page_size=3`, `max_width=400` — see photos
+3. Paginate: `search_imagery(query="...", search_id=X, page=2, output="image_content")` — **`query` is always required**, even with `search_id`
 
 ### Boston Open Data MCP (`boston`)
 City of Boston's open data portal (data.boston.gov).

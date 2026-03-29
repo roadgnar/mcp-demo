@@ -27,15 +27,16 @@ Server name: `cyvl` | 19 tools | Endpoint: `i3.cyvl.dev`
 | `max_width` | int | Pixel width for `image_content`. Use 400 for demos |
 | `lat`, `lon`, `radius_m` | float | Optional spatial filter |
 | `bbox` | array | `[west, south, east, north]` alternative to radius |
-| `search_id`, `page` | string, int | Pagination — reuse `search_id` from previous response |
+| `search_id`, `page` | string, int | Pagination — reuse `search_id` from previous response. **`query` is still required.** |
 | `min_score` | float | Confidence threshold (default 0.4) |
 
 ### Workflow
 ```
-1. search_imagery(query, output="metadata")  → get count + search_id
-2. search_imagery(search_id=X, output="image_content", page_size=3, max_width=400)  → view photos
-3. search_imagery(search_id=X, page=2, output="image_content")  → next page
+1. search_imagery(query="fire hydrants", output="metadata")  → get count + search_id
+2. search_imagery(query="fire hydrants", search_id=X, output="image_content", page_size=3, max_width=400)  → view photos
+3. search_imagery(query="fire hydrants", search_id=X, page=2, output="image_content")  → next page
 ```
+NOTE: `query` must be included in EVERY call, even when paginating with `search_id`.
 
 ## Infrastructure Queries
 

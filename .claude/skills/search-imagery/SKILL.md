@@ -22,7 +22,9 @@ For other cities, use `list_projects` to discover available project IDs.
 
 2. Report the result count and average confidence level.
 
-3. Ask: "Want to see the images?" If yes, re-call with same `search_id` and:
+3. Ask: "Want to see the images?" If yes, re-call with same `query` AND `search_id`:
+   - query: same query as step 1 (**required even with search_id**)
+   - search_id: from step 1
    - output: `image_content`
    - page_size: 3
    - max_width: 400
