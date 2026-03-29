@@ -14,7 +14,6 @@
 #   1. Checks prerequisites (Node.js 18+, Python 3+, npx, uvx)
 #   2. Reads API keys from .env.local
 #   3. Generates .mcp.json and .cursor/mcp.json with npx/uvx servers
-#   4. Prints Claude Desktop config snippet for manual addition
 #
 # No git clone, no npm install, no npm build — npx and uvx handle everything.
 # Idempotent: safe to run multiple times.
@@ -213,42 +212,6 @@ if [ -z "$SOCRATA_TOKEN" ] || [ -z "$DC_KEY" ]; then
   echo -e "  2. Re-run: ${CYAN}./scripts/setup-civic.sh${NC}"
   echo ""
 fi
-
-# --- Claude Desktop ---
-echo -e "${BOLD}For Claude Desktop:${NC}"
-echo -e "  Add to ${CYAN}~/.config/Claude/claude_desktop_config.json${NC} (Linux)"
-echo -e "  or ${CYAN}~/Library/Application Support/Claude/claude_desktop_config.json${NC} (macOS):"
-echo ""
-echo -e "${DIM}  Merge these servers into your existing mcpServers object:${NC}"
-echo ""
-cat << DESKTOPEOF
-    "socrata": {
-      "command": "npx",
-      "args": ["-y", "socrata-mcp-server", "--stdio"],
-      "env": {
-        "DEFAULT_DOMAIN": "data.cityofnewyork.us",
-        "SOCRATA_APP_TOKEN": "${SOCRATA_TOKEN}",
-        "CACHE_ENABLED": "true",
-        "LOG_LEVEL": "info"
-      }
-    },
-    "data-commons": {
-      "command": "uvx",
-      "args": ["datacommons-mcp", "serve", "stdio"],
-      "env": {
-        "DC_API_KEY": "${DC_KEY}"
-      }
-    }
-DESKTOPEOF
-echo ""
-echo -e "  ${DIM}Then restart Claude Desktop (full quit + reopen).${NC}"
-echo ""
-
-# --- Windows note ---
-echo -e "${BOLD}Windows users:${NC}"
-echo -e "  Use ${CYAN}\"command\": \"cmd\"${NC} with ${CYAN}\"args\": [\"/c\", \"npx\", ...]${NC}"
-echo -e "  Example: ${DIM}{\"command\": \"cmd\", \"args\": [\"/c\", \"npx\", \"-y\", \"socrata-mcp-server\", \"--stdio\"]}${NC}"
-echo ""
 
 # --- Quick start ---
 echo -e "${BOLD}Quick start:${NC}"
