@@ -31,18 +31,10 @@ Data Commons NYC DCID: `geoId/3651000`
 
 ### Open the Project
 
-**Claude Desktop (Cowork):**
-1. Open Claude Desktop
-2. Click the **Cowork** tab (bottom-left)
-3. Click **"Select folder"** and choose the **`mcp-demo`** folder
-4. Verify you're **scoped to the mcp-demo repo** — you should see `CLAUDE.md` in the session
-5. Open the **MCP connectors** panel (plug icon) and connect **Cyvl** via OAuth
-
-**Claude Code:**
 ```bash
 cd mcp-demo
 claude
-/mcp   # Connect Cyvl via OAuth
+/mcp   # Connect Cyvl via OAuth (one-time)
 ```
 
 ### Recommended: Run Through These Examples

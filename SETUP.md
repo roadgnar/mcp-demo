@@ -8,7 +8,7 @@ Complete setup instructions for the MCP Demo environment on macOS, Linux, and Wi
 |------|----------|----------------|
 | Node.js 18+ | Yes (Socrata + Boston MCPs) | [nodejs.org](https://nodejs.org/) |
 | Python 3.11+ with uv | Yes (Data Commons MCP) | [astral.sh/uv](https://docs.astral.sh/uv/) |
-| Claude Desktop or Claude Code | Yes (MCP host) | [claude.ai/download](https://claude.ai/download) |
+| Claude Code or Cursor | Yes (MCP host) | [claude.ai/download](https://claude.ai/download) |
 | Cyvl account | Yes (infrastructure imagery) | Contact your org's Cyvl admin |
 
 ## Step 1: Get Your API Keys (All Platforms)
@@ -95,26 +95,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\setup-civic.ps1 -Check
 1. Checks prerequisites (Node.js 18+, Python 3+, npx, uvx)
 2. Reads keys from `.env.local`
 3. Generates `.mcp.json` (Claude Code) and `.cursor/mcp.json` (Cursor)
-4. Prints a Claude Desktop config snippet for manual addition
 
 The script is idempotent — safe to run multiple times.
 
 ## Step 4: Open the Project + Connect Cyvl
-
-### Option A: Claude Desktop (Cowork) — Recommended
-
-1. Open **Claude Desktop**
-2. Click the **Cowork** tab (bottom-left)
-3. Click **"Select folder"** and choose the **`mcp-demo`** folder you cloned
-4. Verify you're **scoped to the mcp-demo repo** — you should see `CLAUDE.md` referenced in the session. If you see a different project's files, re-select the correct folder.
-5. The **Socrata**, **Data Commons**, and **Boston CKAN** MCPs auto-connect from `.mcp.json` — no action needed
-6. Connect **Cyvl** (one-time OAuth):
-   - Open the **MCP connectors** panel (plug icon in the sidebar)
-   - Search for **"Cyvl"**
-   - Click **Connect** and log in with your Cyvl account
-   - Authorize access when prompted
-
-### Option B: Claude Code (Terminal)
 
 1. Open your terminal
 2. Navigate to the mcp-demo repo:
@@ -125,12 +109,14 @@ The script is idempotent — safe to run multiple times.
    ```bash
    claude
    ```
-4. The Socrata, Data Commons, and Boston CKAN MCPs auto-connect
+4. The Socrata, Data Commons, and Boston CKAN MCPs auto-connect from `.mcp.json`
 5. Connect Cyvl (one-time OAuth):
    ```
    /mcp
    ```
    Click **Cyvl** in the list and complete the OAuth login
+
+**Cursor users:** Open the `mcp-demo` folder in Cursor. It reads `.cursor/mcp.json` and connects all servers automatically.
 
 ## Step 5: Verify Everything Works
 
@@ -168,84 +154,9 @@ How many pedestrian crashes has Boston had this year?
 
 If any test fails, check the [Troubleshooting](#troubleshooting) section below.
 
-## Claude Desktop Config (Manual)
-
-If you prefer to configure Claude Desktop manually instead of using the setup script, add the server definitions to your config file:
-
-| Platform | Config path |
-|----------|-------------|
-| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
-| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
-| Linux | `~/.config/Claude/claude_desktop_config.json` |
-
-Add the following to the `mcpServers` object in your config file (merge with any existing servers):
-
-**macOS / Linux:**
-
-```json
-{
-  "mcpServers": {
-    "boston": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp"]
-    },
-    "socrata": {
-      "command": "npx",
-      "args": ["-y", "socrata-mcp-server", "--stdio"],
-      "env": {
-        "DEFAULT_DOMAIN": "data.cityofnewyork.us",
-        "SOCRATA_APP_TOKEN": "YOUR_TOKEN_HERE",
-        "CACHE_ENABLED": "true",
-        "LOG_LEVEL": "info"
-      }
-    },
-    "data-commons": {
-      "command": "uvx",
-      "args": ["datacommons-mcp", "serve", "stdio"],
-      "env": {
-        "DC_API_KEY": "YOUR_KEY_HERE"
-      }
-    }
-  }
-}
-```
-
-**Windows:** Use `cmd /c` wrappers for npx commands:
-
-```json
-{
-  "mcpServers": {
-    "boston": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "mcp-remote", "https://vgcpuua1ua.execute-api.us-east-1.amazonaws.com/staging/mcp"]
-    },
-    "socrata": {
-      "command": "cmd",
-      "args": ["/c", "npx", "-y", "socrata-mcp-server", "--stdio"],
-      "env": {
-        "DEFAULT_DOMAIN": "data.cityofnewyork.us",
-        "SOCRATA_APP_TOKEN": "YOUR_TOKEN_HERE",
-        "CACHE_ENABLED": "true",
-        "LOG_LEVEL": "info"
-      }
-    },
-    "data-commons": {
-      "command": "uvx",
-      "args": ["datacommons-mcp", "serve", "stdio"],
-      "env": {
-        "DC_API_KEY": "YOUR_KEY_HERE"
-      }
-    }
-  }
-}
-```
-
-Then restart Claude Desktop (full quit and reopen).
-
 ## Windows Notes
 
 - **npx requires `cmd /c` wrapper** in MCP configs on Windows — the PowerShell script handles this automatically
-- **MSIX (Microsoft Store) Claude Desktop** may use a different config path under `%LOCALAPPDATA%\Packages\...\LocalCache\Roaming\Claude\`
 - **If MCP servers fail to connect**, verify that Node.js and Python are in your system PATH
 - **uvx works directly** on Windows — no wrapper needed
 
@@ -272,5 +183,4 @@ City branches add curated examples, datasets, and prompts on top of the base set
 | Boston MCP unreachable | Remote server down | Check status; this is a hosted MCP — no local fix |
 | MCP servers not loading in Cursor | Config not in `.cursor/mcp.json` | Re-run the setup script to regenerate configs |
 | Windows: npx hangs or fails | Missing `cmd /c` wrapper | Use the PowerShell setup script, which adds `cmd /c` automatically |
-| MSIX Claude Desktop can't find config | Different config path for Store apps | Check `%LOCALAPPDATA%\Packages\` for the Claude data directory |
 | `.env.local` not found | Haven't copied the example yet | Run `cp .env.local.example .env.local` and add your keys |
