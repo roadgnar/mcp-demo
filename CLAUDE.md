@@ -2,7 +2,7 @@
 
 You are helping users explore infrastructure and civic data through up to four MCP servers. Your role is to answer questions using real data — pavement conditions, traffic signs, crash records, 311 complaints, construction activity, street-level imagery, and civic statistics across multiple cities.
 
-For demo prompts with expected results, see `EXAMPLES.md`. City-specific examples on the `boston` and `nyc` branches.
+For demo prompts with expected results, switch to a city branch (`boston` or `nyc`) which include `EXAMPLES-*.md` files.
 
 ## MCP Servers
 

@@ -27,7 +27,7 @@ See your city's infrastructure through AI. Cyvl searches 237K+ street-level imag
 | `/crash-analysis` | Cross-MCP crash + pavement correlation |
 | `/infrastructure-report` | Analyze conditions for a specific area |
 | `/sidewalk-audit` | Inventory sidewalks/curbs from imagery |
-| `/generate-report` | Generate PDF/HTML reports from infrastructure data |
+| `/report` | Create shareable HTML briefs with data, photos, and recommendations |
 
 ## How It Works
 
@@ -46,8 +46,7 @@ graph TD
     end
 
     subgraph "civic-ai-tools Framework"
-        Socrata --> NYC["NYC Open Data\n311 / Restaurants / Housing"]
-        Socrata --> Multi["Chicago / SF / Seattle / LA"]
+        Socrata --> Multi["NYC / Chicago / SF / Seattle / LA\n311 / Restaurants / Housing"]
         Socrata -.->|"skill guidance\nanti-hallucination"| Skills["docs/skills/base.md\n(query patterns + safety)"]
     end
 
@@ -73,7 +72,7 @@ For complete setup instructions including API key registration, Windows PowerShe
 **Optional (for PDF report generation):**
 - **Google Chrome or Chromium** — used for HTML-to-PDF conversion via headless mode. Most systems already have this.
 
-Without Chrome, the `/generate-report` skill generates HTML that you can open in any browser and print to PDF manually.
+Without Chrome, the `/report` skill generates HTML that you can open in any browser and print to PDF manually.
 
 ## Quick Start — Claude Code
 
@@ -115,21 +114,21 @@ Search for "fire hydrants" and show me 3 images
 
 ## City Branches
 
-The **main** branch is the city-agnostic framework — it works for any city with Cyvl coverage and open data.
+You are on the **main** branch — the city-agnostic framework. It works for any city with Cyvl coverage and open data.
 
-City-specific branches add curated demos, dataset IDs, and neighborhood-level prompts:
+**To try city-specific demos with curated examples and datasets, switch to a city branch:**
 
 | Branch | What It Adds |
 |--------|-------------|
-| `boston` | Boston neighborhoods, Vision Zero walkthrough, 311 pothole demos |
-| `nyc` | NYC 311, restaurant inspections, housing violations demos |
+| `boston` | Boston neighborhoods, Vision Zero, 311 potholes, Somerville |
+| `nyc` | Queens Cyvl imagery, NYC 311, restaurant inspections, housing violations |
+| **`main` (you are here)** | City-agnostic framework — works for any city |
 
-To switch to a city branch:
+To switch branches:
 ```bash
-git checkout boston   # or: git checkout nyc
+git checkout boston   # Boston demos
+git checkout nyc     # NYC demos
 ```
-
-Main branch users: run `list_projects(has_embeddings=true)` in Cyvl to discover which cities have imagery coverage.
 
 ## What's In This Repo
 
@@ -139,7 +138,7 @@ Main branch users: run `list_projects(has_embeddings=true)` in Cyvl to discover 
 | `.mcp.json` | MCP server connections — auto-loaded |
 | `.claude/settings.json` | Pre-approved tool permissions |
 | `.claude/skills/` | Reusable workflows invoked via `/` commands |
-| `EXAMPLES.md` | Hands-on demo prompts with expected results |
+| `EXAMPLES-*.md` | Hands-on demo prompts (on city branches: `boston`, `nyc`) |
 | `prompts/` | Prompt recipes organized by use case |
 | `reference/` | Tool docs, dataset schemas, spatial filter examples |
 

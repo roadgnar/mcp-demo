@@ -25,4 +25,4 @@ Claude Code can build working interactive tools from natural language. This is t
 - Tool generation works best when you describe the workflow (input → interaction → output)
 - Claude builds these as interactive terminal applications — they work in Claude Code
 - The tools use live MCP data — they're not mockups
-- Combine with `/generate-report` to turn tool outputs into shareable documents
+- Combine with `/report` to turn tool outputs into shareable documents
