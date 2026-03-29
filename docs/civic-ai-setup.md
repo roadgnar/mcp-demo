@@ -1,6 +1,6 @@
 # Civic AI Tools — Setup Guide
 
-Add NYC Open Data (Socrata) and Google Data Commons MCP servers to this workspace, alongside the existing Boston Open Data MCP.
+Add Socrata Open Data and Google Data Commons MCP servers to this workspace, alongside the existing Boston Open Data MCP.
 
 ## What You Get
 
@@ -9,7 +9,7 @@ After setup, you have **three MCP servers** available in Claude Code and Cursor:
 | Server | Data Source | Transport | Auth |
 |--------|------------|-----------|------|
 | `boston` | Boston Open Data (data.boston.gov, CKAN) | Remote HTTP | None |
-| `socrata` | NYC Open Data + 4 other cities (Socrata) | Local stdio | Optional `SOCRATA_APP_TOKEN` |
+| `socrata` | Multi-city open data via Socrata (NYC, Chicago, SF, Seattle, LA) | Local stdio | Optional `SOCRATA_APP_TOKEN` |
 | `data-commons` | Google Data Commons (Census, UN, WHO, CDC) | Local stdio | Required `DC_API_KEY` |
 
 This means you can compare civic data across Boston, NYC, Chicago, SF, Seattle, and LA in a single conversation, plus pull in demographic/statistical data from Data Commons for any US location.
@@ -53,32 +53,11 @@ The script is **idempotent** — safe to run multiple times. It skips steps alre
 
 Verifies Node.js 18+, npm, git, Python 3.11+, and uv/pip3 are installed. Exits with clear error messages if anything is missing.
 
-### Step 2: Clone & Build Socrata MCP Server
-
-```
-.mcp-servers/
-└── socrata-mcp-server/      ← Cloned from GitHub
-    ├── src/                  ← TypeScript source
-    ├── dist/
-    │   └── index.js          ← Built entry point (what MCP runs)
-    └── node_modules/         ← Dependencies
-```
-
-- Shallow-clones [npstorey/socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server)
-- Runs `npm install` + `npm run build` to compile TypeScript
-- Result: `.mcp-servers/socrata-mcp-server/dist/index.js`
-
-### Step 3: Install Data Commons MCP
-
-- Installs `datacommons-mcp` Python package via `uv tool install` (preferred) or `pip3 install`
-- Verifies the `datacommons-mcp` command is available in `$PATH`
-- Result: executable at `~/.local/bin/datacommons-mcp` (typical)
-
-### Step 4: Load API Keys
+### Step 2: Load API Keys
 
 Reads `SOCRATA_APP_TOKEN` and `DC_API_KEY` from `.env.local`. Warns if either is missing.
 
-### Step 5: Generate MCP Configurations
+### Step 3: Generate MCP Configurations
 
 Creates two config files with API keys and paths baked in:
 
@@ -89,7 +68,7 @@ Creates two config files with API keys and paths baked in:
 
 Both files are **gitignored** because they contain API keys.
 
-### Step 6: Print Summary
+### Step 4: Print Summary
 
 Shows status of all three servers and lists generated files.
 
@@ -122,7 +101,7 @@ Both keys are **free** and **low-risk** (public data APIs). They can be revoked 
 
 ### Socrata App Token (Optional)
 
-- **What it does**: Increases rate limits for NYC Open Data queries. Without it, queries still work but at lower rate limits.
+- **What it does**: Increases rate limits for Socrata queries. Without it, queries still work but at lower rate limits.
 - **Get it**: [NYC Open Data Developer Settings](https://data.cityofnewyork.us/profile/edit/developer_settings) (requires free account)
 - **The value you need**: The "Key ID" (not the "Key Secret")
 
@@ -148,9 +127,6 @@ mcp-demo/
 ├── .cursor/mcp.json                ← Generated (gitignored) — Cursor
 ├── .env.local                      ← Your API keys (gitignored)
 ├── .env.local.example              ← Template (committed)
-├── .mcp-servers/                   ← Built MCP server (gitignored)
-│   └── socrata-mcp-server/
-│       └── dist/index.js
 ├── scripts/
 │   └── setup-civic.sh              ← This setup script
 ├── docs/
@@ -165,7 +141,6 @@ mcp-demo/
 ```bash
 ./scripts/setup-civic.sh              # Full setup (interactive)
 ./scripts/setup-civic.sh --check      # Preflight only — verify prerequisites, no changes
-./scripts/setup-civic.sh --force      # Re-clone and rebuild from scratch
 ```
 
 ## Troubleshooting
@@ -174,10 +149,8 @@ mcp-demo/
 |---------|-----|
 | `datacommons-mcp: command not found` | Run `export PATH="$HOME/.local/bin:$PATH"` then re-run setup |
 | Cursor MCP "connection failed" | Check `.cursor/mcp.json` has absolute paths. Re-run setup. |
-| `npm run build` fails | Check Node.js version (`node -v`). Need 18+. |
 | Socrata queries return 429 | Add `SOCRATA_APP_TOKEN` to `.env.local` and re-run setup |
 | Data Commons returns auth error | Check `DC_API_KEY` is set in `.env.local`. Re-run setup. |
-| `git clone` fails (firewall) | Download socrata-mcp-server ZIP manually into `.mcp-servers/` |
 
 ## Socrata MCP — Tool Reference
 
@@ -199,13 +172,13 @@ mcp-demo/
 | `data.seattle.gov` | Seattle | Full |
 | `data.lacity.org` | Los Angeles | Query-only — only `get_data` works |
 
-### Key NYC Datasets
+### Key Socrata Datasets (NYC examples)
 
-| Dataset | ID | Notes |
-|---------|-----|-------|
-| 311 Service Requests | `erm2-nwe9` | ~10k records/day — always add date filter |
-| Restaurant Inspections | `43nn-pn8j` | Grades, violations, cuisine types |
-| Housing Violations | `wvxf-dwi5` | ~500-1k records/day |
+| Dataset | ID | Domain | Notes |
+|---------|-----|--------|-------|
+| NYC 311 Service Requests | `erm2-nwe9` | `data.cityofnewyork.us` | ~10k records/day — always add date filter |
+| Chicago 311 | `v6vf-nfxy` | `data.cityofchicago.org` | Similar structure to NYC |
+| SF 311 | `vw6y-z8j6` | `data.sfgov.org` | Limited search — query directly |
 
 ### SoQL Query Patterns
 
@@ -260,15 +233,18 @@ SELECT * WHERE within_circle(location, 42.36, -71.06, 500)
 
 Try these in Claude Code or Cursor:
 
-**NYC Open Data (Socrata):**
-> "What are the top 10 complaint types in NYC 311 this month?"
+**Boston Open Data (CKAN):**
+> "How many pedestrian crashes has Boston had this year?"
 
-> "Show me restaurant inspection grades in Manhattan for the last 30 days"
+> "What are the top pothole complaint neighborhoods in Boston 311?"
+
+**Socrata (cross-city):**
+> "What are the top 10 complaint types in Chicago 311 this month?"
 
 **Data Commons:**
-> "Compare the population of NYC, Boston, and Chicago over the last 10 years"
+> "Compare the population of Boston, NYC, and Chicago over the last 10 years"
 
-> "What's the median income in Boston vs NYC?"
+> "What's the median income in Boston vs the national average?"
 
 **Cross-source:**
-> "How does NYC's 311 complaint volume compare to Boston's, adjusted for population?"
+> "How does Boston's 311 complaint volume compare to Chicago's, adjusted for population?"

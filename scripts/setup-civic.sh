@@ -3,7 +3,7 @@
 # setup-civic.sh — Setup Socrata + Data Commons MCP servers (npx/uvx edition)
 # =============================================================================
 #
-# Configures NYC Open Data (Socrata) and Google Data Commons MCP servers
+# Configures Socrata Open Data and Google Data Commons MCP servers
 # alongside the existing Boston Open Data MCP.
 #
 # Usage:
@@ -196,7 +196,7 @@ step "Setup complete!"
 echo ""
 echo -e "${BOLD}MCP Servers configured:${NC}"
 echo -e "  ${GREEN}1.${NC} boston        — Boston Open Data (remote HTTP via mcp-remote)"
-echo -e "  ${GREEN}2.${NC} socrata      — NYC Open Data via Socrata (npx, stdio)"
+echo -e "  ${GREEN}2.${NC} socrata      — Multi-city Open Data via Socrata (npx, stdio)"
 echo -e "  ${GREEN}3.${NC} data-commons — Google Data Commons (uvx, stdio)"
 echo ""
 echo -e "${BOLD}Generated files:${NC}"

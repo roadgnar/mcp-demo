@@ -2,7 +2,7 @@
 # setup-civic.ps1 — Setup Socrata + Data Commons MCP servers (Windows/PowerShell)
 # =============================================================================
 #
-# Configures NYC Open Data (Socrata) and Google Data Commons MCP servers
+# Configures Socrata Open Data and Google Data Commons MCP servers
 # alongside the existing Boston Open Data MCP.
 #
 # Usage:
@@ -227,7 +227,7 @@ Write-Step "Setup complete!"
 Write-Host ""
 Write-Host "MCP Servers configured:" -ForegroundColor White
 Write-Host "  1. boston        — Boston Open Data (remote HTTP via mcp-remote)"
-Write-Host "  2. socrata      — NYC Open Data via Socrata (npx, stdio)"
+Write-Host "  2. socrata      — Multi-city Open Data via Socrata (npx, stdio)"
 Write-Host "  3. data-commons — Google Data Commons (uvx, stdio)"
 Write-Host ""
 Write-Host "Generated files:" -ForegroundColor White

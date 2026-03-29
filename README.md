@@ -27,7 +27,7 @@ See your city's infrastructure through AI. Cyvl searches 237K+ street-level imag
 | `/crash-analysis` | Cross-MCP crash + pavement correlation |
 | `/infrastructure-report` | Analyze conditions for a specific area |
 | `/sidewalk-audit` | Inventory sidewalks/curbs from imagery |
-| `/generate-report` | Generate PDF/HTML reports from infrastructure data |
+| `/report` | Create shareable HTML briefs with data, photos, and recommendations |
 
 ## How It Works
 
@@ -72,7 +72,7 @@ For complete setup instructions including API key registration, Windows PowerShe
 **Optional (for PDF report generation):**
 - **Google Chrome or Chromium** — used for HTML-to-PDF conversion via headless mode. Most systems already have this.
 
-Without Chrome, the `/generate-report` skill generates HTML that you can open in any browser and print to PDF manually.
+Without Chrome, the `/report` skill generates HTML that you can open in any browser and print to PDF manually.
 
 ## Quick Start — Claude Code
 
@@ -143,7 +143,7 @@ git checkout main    # City-agnostic base
 | `.mcp.json` | MCP server connections — auto-loaded |
 | `.claude/settings.json` | Pre-approved tool permissions |
 | `.claude/skills/` | Reusable workflows invoked via `/` commands |
-| `EXAMPLES.md` | Hands-on demo prompts with expected results |
+| `EXAMPLES-BOSTON.md` | Hands-on demo prompts with expected results |
 | `prompts/` | Prompt recipes organized by use case |
 | `reference/` | Tool docs, dataset schemas, spatial filter examples |
 
