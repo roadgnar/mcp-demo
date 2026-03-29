@@ -9,7 +9,7 @@ argument-hint: [search query, e.g. "bus stops", "cracked sidewalks"]
 
 Search street-level images using natural language via the Cyvl MCP.
 
-**Default Project (Boston):** `8d8f8cd6-f25a-470c-88fd-6b0e0ad4d1d7`
+**Default Project (NYC — Jackson Heights, Queens):** `1924f65d-01b6-4170-b0b8-ddf6a887b6e5`
 
 For other cities, use `list_projects` to discover available project IDs.
 

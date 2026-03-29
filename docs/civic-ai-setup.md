@@ -53,34 +53,13 @@ The script is **idempotent** — safe to run multiple times. It skips steps alre
 
 Verifies Node.js 18+, npm, git, Python 3.11+, and uv/pip3 are installed. Exits with clear error messages if anything is missing.
 
-### Step 2: Clone & Build Socrata MCP Server
-
-```
-.mcp-servers/
-└── socrata-mcp-server/      ← Cloned from GitHub
-    ├── src/                  ← TypeScript source
-    ├── dist/
-    │   └── index.js          ← Built entry point (what MCP runs)
-    └── node_modules/         ← Dependencies
-```
-
-- Shallow-clones [npstorey/socrata-mcp-server](https://github.com/npstorey/socrata-mcp-server)
-- Runs `npm install` + `npm run build` to compile TypeScript
-- Result: `.mcp-servers/socrata-mcp-server/dist/index.js`
-
-### Step 3: Install Data Commons MCP
-
-- Installs `datacommons-mcp` Python package via `uv tool install` (preferred) or `pip3 install`
-- Verifies the `datacommons-mcp` command is available in `$PATH`
-- Result: executable at `~/.local/bin/datacommons-mcp` (typical)
-
-### Step 4: Load API Keys
+### Step 2: Load API Keys
 
 Reads `SOCRATA_APP_TOKEN` and `DC_API_KEY` from `.env.local`. Warns if either is missing.
 
-### Step 5: Generate MCP Configurations
+### Step 3: Generate MCP Configurations
 
-Creates two config files with API keys and paths baked in:
+Creates two config files with API keys baked in. Servers run via `npx socrata-mcp-server` and `uvx datacommons-mcp` — no cloning or building required.
 
 | File | For | Path Type |
 |------|-----|-----------|
@@ -89,7 +68,7 @@ Creates two config files with API keys and paths baked in:
 
 Both files are **gitignored** because they contain API keys.
 
-### Step 6: Print Summary
+### Step 4: Print Summary
 
 Shows status of all three servers and lists generated files.
 
@@ -148,9 +127,6 @@ mcp-demo/
 ├── .cursor/mcp.json                ← Generated (gitignored) — Cursor
 ├── .env.local                      ← Your API keys (gitignored)
 ├── .env.local.example              ← Template (committed)
-├── .mcp-servers/                   ← Built MCP server (gitignored)
-│   └── socrata-mcp-server/
-│       └── dist/index.js
 ├── scripts/
 │   └── setup-civic.sh              ← This setup script
 ├── docs/
@@ -165,7 +141,6 @@ mcp-demo/
 ```bash
 ./scripts/setup-civic.sh              # Full setup (interactive)
 ./scripts/setup-civic.sh --check      # Preflight only — verify prerequisites, no changes
-./scripts/setup-civic.sh --force      # Re-clone and rebuild from scratch
 ```
 
 ## Troubleshooting
@@ -174,10 +149,8 @@ mcp-demo/
 |---------|-----|
 | `datacommons-mcp: command not found` | Run `export PATH="$HOME/.local/bin:$PATH"` then re-run setup |
 | Cursor MCP "connection failed" | Check `.cursor/mcp.json` has absolute paths. Re-run setup. |
-| `npm run build` fails | Check Node.js version (`node -v`). Need 18+. |
 | Socrata queries return 429 | Add `SOCRATA_APP_TOKEN` to `.env.local` and re-run setup |
 | Data Commons returns auth error | Check `DC_API_KEY` is set in `.env.local`. Re-run setup. |
-| `git clone` fails (firewall) | Download socrata-mcp-server ZIP manually into `.mcp-servers/` |
 
 ## Socrata MCP — Tool Reference
 
